@@ -40,7 +40,7 @@
                     <li><a href="#">Jml Trafo Terpasang per Area</a></li>
                     <li><a href="#">Jml Jaringan per Area</a></li>
                     <li><a href="#">Jml Kubikel Gardu Distribusi per Area</a></li>
-                    <li><a href="#">User</a></li>
+                    <li><a href="/user-account">User</a></li>
                 </ul>
             </td>
 
