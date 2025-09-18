@@ -13,6 +13,7 @@ use App\Controllers\GarduIndukController;
 use App\Controllers\GarduHubungController;
 use App\Controllers\UserAccountController;
 use App\Controllers\GarduDistribusiController;
+use App\Controllers\JurusanController;
 use App\Controllers\KubikelController;
 use App\Controllers\KubikelGarduController;
 use App\Controllers\TrafoGarduController;
@@ -61,6 +62,9 @@ $router->resource("/kubikel", KubikelController::class);
 
 // kubikel-gardu routes
 $router->resource("/kubikel-gardu", KubikelGarduController::class);
+
+// kubikel-gardu routes
+$router->resource("/jurusan", JurusanController::class);
 
 // gardu penyulang routes
 $router->resource("/user-account", UserAccountController::class);

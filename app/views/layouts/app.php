@@ -26,7 +26,7 @@
                     <li><a href="/trafo-gi">Trafo Gardu Induk</a></li>
                     <li><a href="/trafo-gardu">Trafo Gardu Distribusi</a></li>
                     <li><a href="/kubikel-gardu">Kubikel Gardu Distribusi</a></li>
-                    <li><a href="#">Jurusan</a></li>
+                    <li><a href="/jurusan">Jurusan</a></li>
                     <li><a href="/trafo">Trafo</a></li>
                     <li><a href="/kubikel">Kubikel</a></li>
                 </ul>
