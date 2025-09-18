@@ -32,7 +32,7 @@
             <?php endforeach; ?>
         <?php else: ?>
             <tr>
-                <td colspan="7">Belum ada gardu distribusi.</td>
+                <td colspan="5">Belum ada gardu distribusi.</td>
             </tr>
         <?php endif; ?>
     </tbody>

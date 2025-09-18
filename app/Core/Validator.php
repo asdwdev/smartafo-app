@@ -114,13 +114,18 @@ class Validator
                         }
                         break;
 
-                    // TODO: tambahin rule lain kalau perlu (between, date, dsb)
                     case 'between':
                         if ($value !== '' && $param) {
                             [$min, $max] = explode(',', $param);
                             if ($value < $min || $value > $max) {
                                 $this->addError($field, "$field harus antara $min dan $max.");
                             }
+                        }
+                        break;
+
+                    case 'nullable':
+                        if ($value === '') {
+                            continue 2; // skip rule lain untuk field ini
                         }
                         break;
                 }
