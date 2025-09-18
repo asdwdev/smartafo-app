@@ -2,11 +2,22 @@
 
 namespace App\Controllers;
 
+use App\Models\GarduHubung;
+use App\Core\Request;
+
 class GarduHubungController
 {
+    protected $model;
+
+    public function __construct()
+    {
+        $this->model = new GarduHubung();
+    }
+
     public function index()
     {
-        return view("gardu-hubung/index");
+        $garduHubungs = $this->model->all();
+        return view("gardu-hubung/index", compact('garduHubungs'));
     }
 
     public function create()
@@ -14,28 +25,55 @@ class GarduHubungController
         return view("gardu-hubung/create");
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        return "✅ Gardu Hubung baru berhasil disimpan!";
+        $data = [
+            'kode_gh' => $request->input('kode_gh'),
+            'nama_gh' => $request->input('nama_gh'),
+            'alamat'  => $request->input('alamat'),
+            'lat'     => $request->input('lat'),
+            'lon'     => $request->input('lon'),
+        ];
+
+        $this->model->create($data);
+        header("Location: /gardu-hubung");
+        exit;
     }
 
     public function show($id)
     {
-        return "📄 Detail Gardu Hubung ID: " . $id;
+        $garduHubung = $this->model->find($id, "gh_id");
+        return view("gardu-hubung/show", compact('garduHubung'));
     }
 
     public function edit($id)
     {
-        return view("gardu-hubung/edit", compact('id'));
+        $garduHubung = $this->model->find($id, "gh_id");
+        return view("gardu-hubung/edit", compact('garduHubung', 'id'));
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        return "✏️ Update Gardu Hubung ID: " . $id;
+        $data = [
+            'kode_gh' => $request->input('kode_gh'),
+            'nama_gh' => $request->input('nama_gh'),
+            'alamat'  => $request->input('alamat'),
+            'lat'     => $request->input('lat'),
+            'lon'     => $request->input('lon'),
+        ];
+
+        if ($this->model->update($id, $data, "gh_id")) {
+            header("Location: /gardu-hubung");
+            exit;
+        } else {
+            var_dump("Gagal update", $data, $id);
+        }
     }
 
     public function destroy($id)
     {
-        return "🗑️ Gardu Hubung ID $id berhasil dihapus!";
+        $this->model->delete($id, "gh_id");
+        header("Location: /gardu-hubung");
+        exit;
     }
 }
