@@ -12,8 +12,8 @@ use App\Controllers\PenyulangController;
 use App\Controllers\GarduIndukController;
 use App\Controllers\GarduHubungController;
 use App\Controllers\UserAccountController;
-use App\Controllers\KubikelTeknisController;
 use App\Controllers\GarduDistribusiController;
+use App\Controllers\KubikelController;
 use App\Controllers\TrafoGarduController;
 use App\Controllers\TrafoGiController;
 
@@ -55,8 +55,8 @@ $router->resource("/trafo-gi", TrafoGiController::class);
 // trafo gardu routes
 $router->resource("/trafo-gardu", TrafoGarduController::class);
 
-// kubikel teknis routes
-$router->resource("/kubikel-teknis", KubikelTeknisController::class);
+// kubikel routes
+$router->resource("/kubikel", KubikelController::class);
 
 // gardu penyulang routes
 $router->resource("/user-account", UserAccountController::class);

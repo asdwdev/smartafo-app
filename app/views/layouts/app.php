@@ -28,7 +28,7 @@
                     <li><a href="#">Kubikel Gardu Distribusi</a></li>
                     <li><a href="#">Jurusan</a></li>
                     <li><a href="/trafo">Trafo</a></li>
-                    <li><a href="/kubikel-teknis">Kubikel</a></li>
+                    <li><a href="/kubikel">Kubikel</a></li>
                 </ul>
 
                 <h3>REKAP DATA</h3>
