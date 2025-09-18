@@ -17,10 +17,9 @@
             <tr>
                 <td><?= htmlspecialchars($p['kode_penyulang']) ?></td>
                 <td><?= htmlspecialchars($p['nama_penyulang']) ?></td>
-                <td><?= htmlspecialchars($p['tegangan']) ?></td>
+                <td><?= htmlspecialchars($p['tegangan_kv']) ?></td>
                 <td><?= htmlspecialchars($p['gi_id']) ?></td>
                 <td>
-                    <a href="/penyulang/<?= $p['penyulang_id'] ?>">Detail</a> |
                     <a href="/penyulang/<?= $p['penyulang_id'] ?>/edit">Edit</a> |
                     <form method="POST" action="/penyulang/<?= $p['penyulang_id'] ?>" style="display:inline">
                         <input type="hidden" name="_method" value="DELETE">

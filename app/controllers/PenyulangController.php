@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Models\Penyulang;
 use App\Core\Request;
+use App\Models\Penyulang;
+use App\Models\GarduInduk;
 
 class PenyulangController
 {
@@ -22,11 +23,8 @@ class PenyulangController
 
     public function create()
     {
-        // contoh data dummy, nanti bisa diambil dari tabel gardu_induk
-        $garduInduk = [
-            ['gi_id' => 1, 'nama_gi' => 'Duri Kosambi'],
-            ['gi_id' => 2, 'nama_gi' => 'Kebon Jeruk'],
-        ];
+        $giModel = new GarduInduk();
+        $garduInduk = $giModel->all();
 
         return view("penyulang/create", compact('garduInduk'));
     }
@@ -36,7 +34,7 @@ class PenyulangController
         $data = [
             'kode_penyulang' => $request->input('kode_penyulang'),
             'nama_penyulang' => $request->input('nama_penyulang'),
-            'tegangan_kv'    => $request->input('tegangan_kv'), // ✅ perbaikan
+            'tegangan_kv'    => $request->input('tegangan_kv'),
             'gi_id'          => $request->input('gi_id'),
         ];
 
@@ -55,12 +53,10 @@ class PenyulangController
     {
         $penyulang = $this->model->find($id, "penyulang_id");
 
-        $garduInduk = [
-            ['gi_id' => 1, 'nama_gi' => 'Duri Kosambi'],
-            ['gi_id' => 2, 'nama_gi' => 'Kebon Jeruk'],
-        ];
+        $giModel = new GarduInduk();
+        $garduInduk = $giModel->all();
 
-        return view("penyulang/edit", compact('penyulang', 'garduInduk'));
+        return view("penyulang/edit", compact('penyulang', 'garduInduk', 'id'));
     }
 
     public function update(Request $request, $id)
