@@ -35,11 +35,13 @@ class Router
     // 🚀 resource helper
     public function resource($basePath, $controller)
     {
-        $this->get($basePath, $controller, "index");         // list
-        $this->get($basePath . "/{id}", $controller, "show"); // detail
-        $this->post($basePath, $controller, "store");         // create
-        $this->put($basePath . "/{id}", $controller, "update"); // update
-        $this->delete($basePath . "/{id}", $controller, "destroy"); // delete
+        $this->get($basePath, $controller, "index");              // list
+        $this->get($basePath . "/create", $controller, "create"); // form create
+        $this->post($basePath, $controller, "store");             // simpan
+        $this->get($basePath . "/{id}", $controller, "show");     // detail
+        $this->get($basePath . "/{id}/edit", $controller, "edit"); // form edit
+        $this->put($basePath . "/{id}", $controller, "update");   // update
+        $this->delete($basePath . "/{id}", $controller, "destroy"); // hapus
     }
 
     public function dispatch($currentPath, $requestMethod)
@@ -62,23 +64,27 @@ class Router
 
                 $controllerInstance = new $controller();
 
-                // cek param method
-                $refMethod = new \ReflectionMethod($controller, $action);
-                $params = [];
+                // cek apakah method butuh Request
+                $reflection = new \ReflectionMethod($controllerInstance, $action);
+                $params = $reflection->getParameters();
 
-                foreach ($refMethod->getParameters() as $param) {
+                $args = [];
+                foreach ($params as $param) {
                     $type = $param->getType();
-
                     if ($type && $type->getName() === \App\Core\Request::class) {
-                        // inject Request
-                        $params[] = new \App\Core\Request();
+                        // kalau butuh Request, buat instance
+                        $args[] = new \App\Core\Request();
                     } elseif (!empty($matches)) {
-                        // inject URL params (misalnya {id})
-                        $params[] = array_shift($matches);
+                        // ambil param dari URL
+                        $args[] = array_shift($matches);
                     }
                 }
 
-                $refMethod->invokeArgs($controllerInstance, $params);
+                $result = $reflection->invokeArgs($controllerInstance, $args);
+
+                if ($result !== null) {
+                    echo $result;
+                }
                 return;
             }
         }

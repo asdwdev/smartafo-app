@@ -6,6 +6,11 @@ class HomeController
 {
     public function index()
     {
-        echo "<h1>Selamat Datang di Home!</h1>";
+        return "Ini halaman home";
+    }
+
+    public function dashboard()
+    {
+        return view('dashboard/index');
     }
 }

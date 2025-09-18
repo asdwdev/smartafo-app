@@ -9,40 +9,38 @@ class AuthController
 {
     public function showLoginForm()
     {
-        echo view('auth/login');
+        return view('auth/login');
     }
 
     public function login(Request $request)
     {
-        $email    = $request->input('email_pln');   // pakai field email PLN
+        $email    = $request->input('email_pln');
         $password = $request->input('password');
 
         $userModel = new UserAccount();
         $user = $userModel->where('email_pln', $email);
 
         if (!$user) {
-            echo "❌ Email tidak ditemukan!";
-            return;
+            return "❌ Email tidak ditemukan!";
         }
 
-        // cek password hash
         if (password_verify($password, $user['password_hash'])) {
-            echo "✅ Login berhasil! Selamat datang, {$user['full_name']}";
-        } else {
-            echo "❌ Password salah!";
+            header("Location: /dashboard");
+            exit;
         }
+
+        return "❌ Password salah!";
     }
 
     public function showSignupForm()
     {
-        echo view('auth/signup');
+        return view('auth/signup');
     }
 
     public function signup(Request $request)
     {
         $userModel = new UserAccount();
 
-        // ambil data dari form
         $data = [
             'nip'           => $request->input('nip'),
             'full_name'     => $request->input('full_name'),
@@ -52,17 +50,14 @@ class AuthController
             'password_hash' => password_hash($request->input('password'), PASSWORD_BCRYPT),
         ];
 
-        // cek email sudah ada atau belum
         if ($userModel->where('email_pln', $data['email_pln'])) {
-            echo "❌ Email sudah terdaftar!";
-            return;
+            return "❌ Email sudah terdaftar!";
         }
 
-        // simpan user baru
         if ($userModel->create($data)) {
-            echo "✅ User baru berhasil didaftarkan!";
-        } else {
-            echo "❌ Gagal mendaftarkan user.";
+            return "✅ User baru berhasil didaftarkan!";
         }
+
+        return "❌ Gagal mendaftarkan user.";
     }
 }
