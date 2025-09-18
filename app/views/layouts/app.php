@@ -19,7 +19,7 @@
 
                 <h3>MASTER DATA</h3>
                 <ul>
-                    <li><a href="#">Gardu Induk</a></li>
+                    <li><a href="/gardu-induk">Gardu Induk</a></li>
                     <li><a href="#">Penyulang</a></li>
                     <li><a href="#">Gardu Hubung</a></li>
                     <li><a href="/gardu-distribusi">Gardu Distribusi</a></li>
