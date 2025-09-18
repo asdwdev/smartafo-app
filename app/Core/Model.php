@@ -69,4 +69,12 @@ abstract class Model
         $stmt->execute(['value' => $value]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function findBy($column, $value)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE {$column} = :value LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['value' => $value]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
