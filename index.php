@@ -10,6 +10,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\PenyulangController;
 use App\Controllers\GarduIndukController;
 use App\Controllers\GarduHubungController;
+use App\Controllers\KubikelTeknisController;
 use App\Controllers\GarduDistribusiController;
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -40,6 +41,11 @@ $router->resource("/gardu-distribusi", GarduDistribusiController::class);
 
 // gardu hubung routes
 $router->resource("/gardu-hubung", GarduHubungController::class);
+
+
+// kubikel tekniks routes
+$router->resource("/kubikel-teknis", KubikelTeknisController::class);
+
 
 
 // 🚀 resource route

@@ -27,7 +27,7 @@
                     <li><a href="#">Trafo Gardu Distribusi</a></li>
                     <li><a href="#">Jaringan</a></li>
                     <li><a href="#">Turbin</a></li>
-                    <li><a href="#">Kubikel</a></li>
+                    <li><a href="/kubikel-teknis">Kubikel</a></li>
                 </ul>
 
                 <h3>REKAP DATA</h3>

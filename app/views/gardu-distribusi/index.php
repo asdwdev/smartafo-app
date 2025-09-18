@@ -1,5 +1,5 @@
 <?php startBlock('content') ?>
-<h3>DAFTAR GARDU DISTRIBUSI</h3>
+<h3>MASTER GARDU DISTRIBUSI</h3>
 <a href="/gardu-distribusi/create">+ Add new record</a>
 
 <table border="1" width="100%">
