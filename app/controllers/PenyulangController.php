@@ -2,16 +2,27 @@
 
 namespace App\Controllers;
 
+use App\Models\Penyulang;
+use App\Core\Request;
+
 class PenyulangController
 {
+    protected $model;
+
+    public function __construct()
+    {
+        $this->model = new Penyulang();
+    }
+
     public function index()
     {
-        return view("penyulang/index");
+        $penyulangs = $this->model->all();
+        return view("penyulang/index", compact('penyulangs'));
     }
 
     public function create()
     {
-        // nanti bisa ambil daftar GI dari DB
+        // contoh data dummy, nanti bisa diambil dari tabel gardu_induk
         $garduInduk = [
             ['gi_id' => 1, 'nama_gi' => 'Duri Kosambi'],
             ['gi_id' => 2, 'nama_gi' => 'Kebon Jeruk'],
@@ -20,33 +31,56 @@ class PenyulangController
         return view("penyulang/create", compact('garduInduk'));
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        return "✅ Penyulang baru berhasil disimpan!";
+        $data = [
+            'kode_penyulang' => $request->input('kode_penyulang'),
+            'nama_penyulang' => $request->input('nama_penyulang'),
+            'tegangan_kv'    => $request->input('tegangan_kv'), // ✅ perbaikan
+            'gi_id'          => $request->input('gi_id'),
+        ];
+
+        $this->model->create($data);
+        header("Location: /penyulang");
+        exit;
     }
 
     public function show($id)
     {
-        return "📄 Detail Penyulang ID: " . $id;
+        $penyulang = $this->model->find($id, "penyulang_id");
+        return view("penyulang/show", compact('penyulang'));
     }
 
     public function edit($id)
     {
+        $penyulang = $this->model->find($id, "penyulang_id");
+
         $garduInduk = [
             ['gi_id' => 1, 'nama_gi' => 'Duri Kosambi'],
             ['gi_id' => 2, 'nama_gi' => 'Kebon Jeruk'],
         ];
 
-        return view("penyulang/edit", compact('id', 'garduInduk'));
+        return view("penyulang/edit", compact('penyulang', 'garduInduk'));
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        return "✏️ Update Penyulang ID: " . $id;
+        $data = [
+            'kode_penyulang' => $request->input('kode_penyulang'),
+            'nama_penyulang' => $request->input('nama_penyulang'),
+            'tegangan_kv'    => $request->input('tegangan_kv'),
+            'gi_id'          => $request->input('gi_id'),
+        ];
+
+        $this->model->update($id, $data, "penyulang_id");
+        header("Location: /penyulang");
+        exit;
     }
 
     public function destroy($id)
     {
-        return "🗑️ Penyulang ID $id berhasil dihapus!";
+        $this->model->delete($id, "penyulang_id");
+        header("Location: /penyulang");
+        exit;
     }
 }

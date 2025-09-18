@@ -43,8 +43,8 @@ class UserAccountController
 
     public function show($id)
     {
-        // $user = $this->userModel->find($id);
-        // return view("user-account/show", compact('user'));
+        $user = $this->userModel->find($id);
+        return view("user-account/show", compact('user'));
     }
 
     public function edit($id)
