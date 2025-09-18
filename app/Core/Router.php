@@ -59,7 +59,26 @@ class Router
 
             if (preg_match($pattern, $currentPath, $matches)) {
                 array_shift($matches);
-                (new $controller())->$action(...$matches);
+
+                $controllerInstance = new $controller();
+
+                // cek param method
+                $refMethod = new \ReflectionMethod($controller, $action);
+                $params = [];
+
+                foreach ($refMethod->getParameters() as $param) {
+                    $type = $param->getType();
+
+                    if ($type && $type->getName() === \App\Core\Request::class) {
+                        // inject Request
+                        $params[] = new \App\Core\Request();
+                    } elseif (!empty($matches)) {
+                        // inject URL params (misalnya {id})
+                        $params[] = array_shift($matches);
+                    }
+                }
+
+                $refMethod->invokeArgs($controllerInstance, $params);
                 return;
             }
         }
