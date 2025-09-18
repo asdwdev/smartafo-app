@@ -46,7 +46,7 @@ class Router
 
     public function dispatch($currentPath, $requestMethod)
     {
-        $requestMethod = strtoupper($requestMethod);
+        $requestMethod = strtoupper((new \App\Core\Request())->method());
 
         if (!isset($this->routes[$requestMethod])) {
             http_response_code(405);

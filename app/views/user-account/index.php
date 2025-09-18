@@ -13,22 +13,30 @@
         <th>Status</th>
         <th>Aksi</th>
     </tr>
-    <tr>
-        <td>123456</td>
-        <td>Budi Santoso</td>
-        <td>budi@pln.co.id</td>
-        <td>Jakarta</td>
-        <td>Admin</td>
-        <td>Approved</td>
-        <td>
-            <a href="/user-account/1">Detail</a> |
-            <a href="/user-account/1/edit">Edit</a> |
-            <form method="POST" action="/user-account/1" style="display:inline">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit">Hapus</button>
-            </form>
-        </td>
-    </tr>
+
+    <?php if (!empty($users)): ?>
+        <?php foreach ($users as $user): ?>
+            <tr>
+                <td><?= htmlspecialchars($user['nip']) ?></td>
+                <td><?= htmlspecialchars($user['full_name']) ?></td>
+                <td><?= htmlspecialchars($user['email_pln']) ?></td>
+                <td><?= htmlspecialchars($user['area']) ?></td>
+                <td><?= htmlspecialchars($user['level_user']) ?></td>
+                <td><?= $user['is_approved'] === 'TRUE' ? 'Approved' : 'Pending' ?></td>
+                <td>
+                    <a href="/user-account/<?= $user['user_id'] ?>/edit">Edit</a> |
+                    <form method="POST" action="/user-account/<?= $user['user_id'] ?>" style="display:inline">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="7">Belum ada user.</td>
+        </tr>
+    <?php endif; ?>
 </table>
 <?php endBlock() ?>
 

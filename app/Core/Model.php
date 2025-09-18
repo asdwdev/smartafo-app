@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use App\Core\Database;
 use PDO;
 
 abstract class Model
@@ -15,6 +14,19 @@ abstract class Model
         $this->db = Database::getInstance();
     }
 
+    public function all()
+    {
+        $stmt = $this->db->query("SELECT * FROM {$this->table} ORDER BY created_at DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function find($id, $pk = "user_id")
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$pk} = :id LIMIT 1");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function create(array $data)
     {
         $keys = array_keys($data);
@@ -23,15 +35,22 @@ abstract class Model
 
         $sql = "INSERT INTO {$this->table} ($columns) VALUES ($placeholders)";
         $stmt = $this->db->prepare($sql);
-
         return $stmt->execute($data);
     }
 
-    public function where($column, $value)
+    public function update($id, array $data, $pk = "user_id")
     {
-        $sql = "SELECT * FROM {$this->table} WHERE {$column} = :value LIMIT 1";
+        $fields = implode(", ", array_map(fn($k) => "$k = :$k", array_keys($data)));
+        $data['id'] = $id;
+
+        $sql = "UPDATE {$this->table} SET $fields WHERE {$pk} = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['value' => $value]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->execute($data);
+    }
+
+    public function delete($id, $pk = "user_id")
+    {
+        $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE {$pk} = :id");
+        return $stmt->execute(['id' => $id]);
     }
 }

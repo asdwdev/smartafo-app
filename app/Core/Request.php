@@ -21,7 +21,13 @@ class Request
 
     public function method()
     {
-        return $_SERVER['REQUEST_METHOD'];
+        $method = $_SERVER['REQUEST_METHOD'];
+
+        if ($method === 'POST' && isset($_POST['_method'])) {
+            return strtoupper($_POST['_method']); // override
+        }
+
+        return $method;
     }
 
     public function path()
