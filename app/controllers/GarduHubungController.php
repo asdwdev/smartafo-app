@@ -27,13 +27,27 @@ class GarduHubungController
 
     public function store(Request $request)
     {
-        $data = [
-            'kode_gh' => $request->input('kode_gh'),
-            'nama_gh' => $request->input('nama_gh'),
-            'alamat'  => $request->input('alamat'),
-            'lat'     => $request->input('lat'),
-            'lon'     => $request->input('lon'),
-        ];
+        [$valid, $data] = $request->validate([
+            'kode_gh' => 'nullable|regex:/^[A-Za-z0-9_-]+$/|unique:gardu_hubung,kode_gh',
+            'nama_gh' => 'required|max:255',
+            'alamat'  => 'nullable|max:500',
+            'lat'     => 'nullable|numeric|between:-90,90',
+            'lon'     => 'nullable|numeric|between:-180,180',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            return view("gardu-hubung/create", [
+                'errors' => $errors,
+                'old' => $request->all()
+            ]);
+        }
+
+        // normalisasi kosong → null
+        $data['lat'] = $data['lat'] === '' ? null : $data['lat'];
+        $data['lon'] = $data['lon'] === '' ? null : $data['lon'];
+        $data['alamat'] = $data['alamat'] === '' ? null : $data['alamat'];
+        $data['kode_gh'] = $data['kode_gh'] === '' ? null : $data['kode_gh'];
 
         $this->model->create($data);
         header("Location: /gardu-hubung");
@@ -54,20 +68,29 @@ class GarduHubungController
 
     public function update(Request $request, $id)
     {
-        $data = [
-            'kode_gh' => $request->input('kode_gh'),
-            'nama_gh' => $request->input('nama_gh'),
-            'alamat'  => $request->input('alamat'),
-            'lat'     => $request->input('lat'),
-            'lon'     => $request->input('lon'),
-        ];
+        [$valid, $data] = $request->validate([
+            'kode_gh' => "nullable|regex:/^[A-Za-z0-9_-]+$/|unique:gardu_hubung,kode_gh,$id,gh_id",
+            'nama_gh' => 'required|max:255',
+            'alamat'  => 'nullable|max:500',
+            'lat'     => 'nullable|numeric|between:-90,90',
+            'lon'     => 'nullable|numeric|between:-180,180',
+        ]);
 
-        if ($this->model->update($id, $data, "gh_id")) {
-            header("Location: /gardu-hubung");
-            exit;
-        } else {
-            var_dump("Gagal update", $data, $id);
+        if (!$valid) {
+            $errors = $data;
+            $garduHubung = $this->model->find($id, "gh_id");
+            return view("gardu-hubung/edit", compact('errors', 'garduHubung', 'id'));
         }
+
+        // normalisasi kosong → null
+        $data['lat'] = $data['lat'] === '' ? null : $data['lat'];
+        $data['lon'] = $data['lon'] === '' ? null : $data['lon'];
+        $data['alamat'] = $data['alamat'] === '' ? null : $data['alamat'];
+        $data['kode_gh'] = $data['kode_gh'] === '' ? null : $data['kode_gh'];
+
+        $this->model->update($id, $data, "gh_id");
+        header("Location: /gardu-hubung");
+        exit;
     }
 
     public function destroy($id)
