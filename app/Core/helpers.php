@@ -21,3 +21,27 @@ if (!function_exists('view')) {
         return ob_get_clean();
     }
 }
+
+$__blocks = [];
+$__currentBlock = null;
+
+function startBlock($name)
+{
+    global $__currentBlock;
+    ob_start();
+    $__currentBlock = $name;
+}
+
+function endBlock()
+{
+    global $__blocks, $__currentBlock;
+    $__blocks[$__currentBlock] = ob_get_clean();
+    $__currentBlock = null;
+}
+
+function extend($layoutPath)
+{
+    global $__blocks;
+    extract($__blocks);
+    require __DIR__ . "/../Views/$layoutPath.php";
+}
