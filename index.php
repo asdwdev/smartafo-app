@@ -7,7 +7,9 @@ use App\Controllers\AuthController;
 use App\Controllers\HomeController;
 use App\Controllers\UserController;
 use App\Controllers\DashboardController;
+use App\Controllers\PenyulangController;
 use App\Controllers\GarduIndukController;
+use App\Controllers\GarduHubungController;
 use App\Controllers\GarduDistribusiController;
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -30,8 +32,14 @@ $router->post("/signup", AuthController::class, "signup");        // optional
 // gardu distribusi routes
 $router->resource("/gardu-induk", GarduIndukController::class);
 
+// gardu penyulang routes
+$router->resource("/penyulang", PenyulangController::class);
+
 // gardu distribusi routes
 $router->resource("/gardu-distribusi", GarduDistribusiController::class);
+
+// gardu hubung routes
+$router->resource("/gardu-hubung", GarduHubungController::class);
 
 
 // 🚀 resource route
