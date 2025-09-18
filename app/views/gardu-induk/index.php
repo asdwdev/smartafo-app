@@ -13,22 +13,30 @@
         <th>LON</th>
         <th>AKSI</th>
     </tr>
-    <tr>
-        <td>GI001</td>
-        <td>Duri Kosambi</td>
-        <td>Jakarta Barat</td>
-        <td>Jl. Daan Mogot</td>
-        <td>-6.1234567</td>
-        <td>106.7654321</td>
-        <td>
-            <a href="/gardu-induk/1">Detail</a> |
-            <a href="/gardu-induk/1/edit">Edit</a> |
-            <form method="POST" action="/gardu-induk/1" style="display:inline">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit">Hapus</button>
-            </form>
-        </td>
-    </tr>
+
+    <?php if (!empty($garduInduks)): ?>
+        <?php foreach ($garduInduks as $gi): ?>
+            <tr>
+                <td><?= htmlspecialchars($gi['kode_gi']) ?></td>
+                <td><?= htmlspecialchars($gi['nama_gi']) ?></td>
+                <td><?= htmlspecialchars($gi['area']) ?></td>
+                <td><?= htmlspecialchars($gi['alamat']) ?></td>
+                <td><?= htmlspecialchars($gi['lat']) ?></td>
+                <td><?= htmlspecialchars($gi['lon']) ?></td>
+                <td>
+                    <a href="/gardu-induk/<?= $gi['gi_id'] ?>/edit">Edit</a> |
+                    <form method="POST" action="/gardu-induk/<?= $gi['gi_id'] ?>" style="display:inline">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="7">Belum ada gardu induk.</td>
+        </tr>
+    <?php endif; ?>
 </table>
 <?php endBlock() ?>
 

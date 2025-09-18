@@ -53,4 +53,20 @@ abstract class Model
         $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE {$pk} = :id");
         return $stmt->execute(['id' => $id]);
     }
+
+    public function where($column, $value)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE {$column} = :value LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['value' => $value]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function whereAll($column, $value)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE {$column} = :value";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['value' => $value]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
