@@ -23,10 +23,11 @@
                     <li><a href="/penyulang">Penyulang</a></li>
                     <li><a href="/gardu-hubung">Gardu Hubung</a></li>
                     <li><a href="/gardu-distribusi">Gardu Distribusi</a></li>
-                    <li><a href="#">Trafo Gardu Induk</a></li>
-                    <li><a href="#">Trafo Gardu Distribusi</a></li>
+                    <li><a href="/trafo-gi">Trafo Gardu Induk</a></li>
+                    <li><a href="/trafo-gardu">Trafo Gardu Distribusi</a></li>
+                    <li><a href="#">Kubikel Gardu Distribusi</a></li>
                     <li><a href="#">Jurusan</a></li>
-                    <li><a href="/trafo-teknis">Trafo</a></li>
+                    <li><a href="/trafo">Trafo</a></li>
                     <li><a href="/kubikel-teknis">Kubikel</a></li>
                 </ul>
 
