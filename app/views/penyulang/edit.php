@@ -28,7 +28,7 @@
     </label><br><br>
 
     <label>Tegangan (kV):
-        <input type="text" name="tegangan_kv"
+        <input type="number" name="tegangan_kv"
             value="<?= htmlspecialchars((string)($old['tegangan_kv'] ?? $penyulang['tegangan_kv'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
     </label><br><br>
 

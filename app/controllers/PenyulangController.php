@@ -34,7 +34,7 @@ class PenyulangController
         [$valid, $data] = $request->validate([
             'kode_penyulang' => 'nullable|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,NULL,penyulang_id,gi_id,' . $request->input('gi_id'),
             'nama_penyulang' => 'required|max:128|unique:penyulang,nama_penyulang,NULL,penyulang_id,gi_id,' . $request->input('gi_id'),
-            'tegangan_kv'    => 'nullable|numeric|between:0,999.999',
+            'tegangan_kv'    => 'nullable|numeric',
             'gi_id'          => 'required|numeric',
         ]);
 
@@ -46,6 +46,10 @@ class PenyulangController
 
             return view("penyulang/create", compact('errors', 'garduInduk'));
         }
+
+        // normalisasi kosong → null
+        $data['kode_penyulang'] = $data['kode_penyulang'] === '' ? null : $data['kode_penyulang'];
+        $data['tegangan_kv']    = $data['tegangan_kv'] === '' ? null : $data['tegangan_kv'];
 
         $this->model->create($data);
         header("Location: /penyulang");
@@ -73,7 +77,7 @@ class PenyulangController
         [$valid, $data] = $request->validate([
             'kode_penyulang' => "nullable|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,$id,penyulang_id,gi_id," . $request->input('gi_id'),
             'nama_penyulang' => "required|max:128|unique:penyulang,nama_penyulang,$id,penyulang_id,gi_id," . $request->input('gi_id'),
-            'tegangan_kv'    => 'nullable|numeric|between:0,999.999',
+            'tegangan_kv'    => 'nullable|numeric',
             'gi_id'          => 'required|numeric',
         ]);
 
@@ -86,6 +90,10 @@ class PenyulangController
 
             return view("penyulang/edit", compact('errors', 'penyulang', 'garduInduk', 'id'));
         }
+
+        // normalisasi kosong → null
+        $data['kode_penyulang'] = $data['kode_penyulang'] === '' ? null : $data['kode_penyulang'];
+        $data['tegangan_kv']    = $data['tegangan_kv'] === '' ? null : $data['tegangan_kv'];
 
         $this->model->update($id, $data, "penyulang_id");
         header("Location: /penyulang");
