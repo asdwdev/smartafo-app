@@ -80,20 +80,27 @@ class Validator
 
                     case 'unique':
                         if ($value !== '' && $this->pdo) {
-                            // Format: unique:table,column[,except,idColumn]
+                            // Format: unique:table,column[,except,idColumn[,extraCol,extraVal]]
                             $parts = explode(',', $param);
                             $table  = $parts[0] ?? null;
                             $column = $parts[1] ?? null;
                             $except = $parts[2] ?? null;
                             $idCol  = $parts[3] ?? 'id';
+                            $extraCol = $parts[4] ?? null;
+                            $extraVal = $parts[5] ?? null;
 
                             if ($table && $column) {
                                 $sql = "SELECT COUNT(*) FROM {$table} WHERE {$column} = ?";
                                 $params = [$value];
 
-                                if ($except) {
+                                if ($except && $except !== 'NULL') {
                                     $sql .= " AND {$idCol} != ?";
                                     $params[] = $except;
+                                }
+
+                                if ($extraCol && $extraVal !== null) {
+                                    $sql .= " AND {$extraCol} = ?";
+                                    $params[] = $extraVal;
                                 }
 
                                 $stmt = $this->pdo->prepare($sql);
@@ -107,7 +114,15 @@ class Validator
                         }
                         break;
 
-                        // TODO: tambahin rule lain kalau perlu (between, date, dsb)
+                    // TODO: tambahin rule lain kalau perlu (between, date, dsb)
+                    case 'between':
+                        if ($value !== '' && $param) {
+                            [$min, $max] = explode(',', $param);
+                            if ($value < $min || $value > $max) {
+                                $this->addError($field, "$field harus antara $min dan $max.");
+                            }
+                        }
+                        break;
                 }
             }
         }

@@ -1,15 +1,42 @@
 <?php startBlock('content') ?>
 <h3>TAMBAH DATA PENYULANG</h3>
 
+<?php if (!empty($errors)): ?>
+    <div style="color:red; font-weight:bold; margin-bottom:10px;">
+        <ul>
+            <?php foreach ($errors as $fieldErrors): ?>
+                <?php foreach ($fieldErrors as $error): ?>
+                    <li><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></li>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
 <form method="POST" action="/penyulang">
-    <label>Kode Penyulang: <input type="text" name="kode_penyulang"></label><br><br>
-    <label>Nama Penyulang: <input type="text" name="nama_penyulang" required></label><br><br>
-    <label>Tegangan (kV): <input type="text" name="tegangan_kv"></label><br><br>
+    <label>Kode Penyulang:
+        <input type="text" name="kode_penyulang"
+            value="<?= htmlspecialchars($old['kode_penyulang'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+    </label><br><br>
+
+    <label>Nama Penyulang:
+        <input type="text" name="nama_penyulang"
+            value="<?= htmlspecialchars($old['nama_penyulang'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+            required>
+    </label><br><br>
+
+    <label>Tegangan (kV):
+        <input type="text" name="tegangan_kv"
+            value="<?= htmlspecialchars((string)($old['tegangan_kv'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+    </label><br><br>
 
     <label>Gardu Induk:
         <select name="gi_id" required>
             <?php foreach ($garduInduk as $gi): ?>
-                <option value="<?= $gi['gi_id'] ?>"><?= $gi['nama_gi'] ?></option>
+                <option value="<?= $gi['gi_id'] ?>"
+                    <?= ($old['gi_id'] ?? '') == $gi['gi_id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($gi['nama_gi'], ENT_QUOTES, 'UTF-8') ?>
+                </option>
             <?php endforeach; ?>
         </select>
     </label><br><br>

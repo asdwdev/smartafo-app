@@ -31,12 +31,21 @@ class PenyulangController
 
     public function store(Request $request)
     {
-        $data = [
-            'kode_penyulang' => $request->input('kode_penyulang'),
-            'nama_penyulang' => $request->input('nama_penyulang'),
-            'tegangan_kv'    => $request->input('tegangan_kv'),
-            'gi_id'          => $request->input('gi_id'),
-        ];
+        [$valid, $data] = $request->validate([
+            'kode_penyulang' => 'nullable|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,NULL,penyulang_id,gi_id,' . $request->input('gi_id'),
+            'nama_penyulang' => 'required|max:128|unique:penyulang,nama_penyulang,NULL,penyulang_id,gi_id,' . $request->input('gi_id'),
+            'tegangan_kv'    => 'nullable|numeric|between:0,999.999',
+            'gi_id'          => 'required|numeric',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+
+            $giModel = new GarduInduk();
+            $garduInduk = $giModel->all();
+
+            return view("penyulang/create", compact('errors', 'garduInduk'));
+        }
 
         $this->model->create($data);
         header("Location: /penyulang");
@@ -61,12 +70,22 @@ class PenyulangController
 
     public function update(Request $request, $id)
     {
-        $data = [
-            'kode_penyulang' => $request->input('kode_penyulang'),
-            'nama_penyulang' => $request->input('nama_penyulang'),
-            'tegangan_kv'    => $request->input('tegangan_kv'),
-            'gi_id'          => $request->input('gi_id'),
-        ];
+        [$valid, $data] = $request->validate([
+            'kode_penyulang' => "nullable|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,$id,penyulang_id,gi_id," . $request->input('gi_id'),
+            'nama_penyulang' => "required|max:128|unique:penyulang,nama_penyulang,$id,penyulang_id,gi_id," . $request->input('gi_id'),
+            'tegangan_kv'    => 'nullable|numeric|between:0,999.999',
+            'gi_id'          => 'required|numeric',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $penyulang = $this->model->find($id, "penyulang_id");
+
+            $giModel = new GarduInduk();
+            $garduInduk = $giModel->all();
+
+            return view("penyulang/edit", compact('errors', 'penyulang', 'garduInduk', 'id'));
+        }
 
         $this->model->update($id, $data, "penyulang_id");
         header("Location: /penyulang");
