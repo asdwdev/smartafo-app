@@ -13,22 +13,30 @@
         <th>Pemilik</th>
         <th>Aksi</th>
     </tr>
-    <tr>
-        <td>TRF001</td>
-        <td>Schneider</td>
-        <td>2000</td>
-        <td>20.000</td>
-        <td>400</td>
-        <td>PLN</td>
-        <td>
-            <a href="/trafo-teknis/1">Detail</a> |
-            <a href="/trafo-teknis/1/edit">Edit</a> |
-            <form method="POST" action="/trafo-teknis/1" style="display:inline">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit">Hapus</button>
-            </form>
-        </td>
-    </tr>
+
+    <?php if (!empty($trafos)): ?>
+        <?php foreach ($trafos as $trafo): ?>
+            <tr>
+                <td><?= $trafo['no_seri'] ?></td>
+                <td><?= $trafo['merk'] ?></td>
+                <td><?= $trafo['kapasitas_kva'] ?></td>
+                <td><?= $trafo['tegangan_primer_kv'] ?></td>
+                <td><?= $trafo['tegangan_sekunder_v'] ?></td>
+                <td><?= $trafo['pemilik'] ?></td>
+                <td>
+                    <a href="/trafo-teknis/<?= $trafo['trafo_teknis_id'] ?>/edit">Edit</a> |
+                    <form method="POST" action="/trafo-teknis/<?= $trafo['trafo_teknis_id'] ?>" style="display:inline">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="5">Belum ada trafo teknis.</td>
+        </tr>
+    <?php endif ?>
 </table>
 <?php endBlock() ?>
 
