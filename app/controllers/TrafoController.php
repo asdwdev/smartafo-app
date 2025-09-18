@@ -27,18 +27,30 @@ class TrafoController
 
     public function store(Request $request)
     {
-        $data = [
-            'no_seri'             => $request->input('no_seri'),
-            'merk'                => $request->input('merk'),
-            'kapasitas_kva'       => $request->input('kapasitas_kva'),
-            'impedansi_persen'    => $request->input('impedansi_persen'),
-            'pemilik'             => $request->input('pemilik'),
-            'jenis_minyak'        => $request->input('jenis_minyak'),
-            'tegangan_primer_kv'  => $request->input('tegangan_primer_kv'),
-            'tegangan_sekunder_v' => $request->input('tegangan_sekunder_v'),
-            'kelas_isolasi'       => $request->input('kelas_isolasi'),
-            'catatan'             => $request->input('catatan'),
-        ];
+        [$valid, $data] = $request->validate([
+            'no_seri'             => 'required|max:128|unique:trafo,no_seri',
+            'merk'                => 'required|max:64',
+            'kapasitas_kva'       => 'required|numeric',
+            'impedansi_persen'    => 'required|numeric',
+            'pemilik'             => 'nullable|max:64',
+            'jenis_minyak'        => 'nullable|max:100',
+            'tegangan_primer_kv'  => 'required|numeric',
+            'tegangan_sekunder_v' => 'required|numeric',
+            'kelas_isolasi'       => 'nullable|max:100',
+            'catatan'             => 'nullable',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            return view("trafo/create", compact('errors'));
+        }
+
+        // normalisasi kosong → null
+        foreach (['pemilik', 'jenis_minyak', 'kelas_isolasi', 'catatan'] as $field) {
+            if ($data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
 
         $this->model->create($data);
         header("Location: /trafo");
@@ -59,18 +71,31 @@ class TrafoController
 
     public function update(Request $request, $id)
     {
-        $data = [
-            'no_seri'             => $request->input('no_seri'),
-            'merk'                => $request->input('merk'),
-            'kapasitas_kva'       => $request->input('kapasitas_kva'),
-            'impedansi_persen'    => $request->input('impedansi_persen'),
-            'pemilik'             => $request->input('pemilik'),
-            'jenis_minyak'        => $request->input('jenis_minyak'),
-            'tegangan_primer_kv'  => $request->input('tegangan_primer_kv'),
-            'tegangan_sekunder_v' => $request->input('tegangan_sekunder_v'),
-            'kelas_isolasi'       => $request->input('kelas_isolasi'),
-            'catatan'             => $request->input('catatan'),
-        ];
+        [$valid, $data] = $request->validate([
+            'no_seri'             => "required|max:128|unique:trafo,no_seri,$id,trafo_id",
+            'merk'                => 'required|max:64',
+            'kapasitas_kva'       => 'required|numeric',
+            'impedansi_persen'    => 'required|numeric',
+            'pemilik'             => 'nullable|max:64',
+            'jenis_minyak'        => 'nullable|max:100',
+            'tegangan_primer_kv'  => 'required|numeric',
+            'tegangan_sekunder_v' => 'required|numeric',
+            'kelas_isolasi'       => 'nullable|max:100',
+            'catatan'             => 'nullable',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $trafo  = $this->model->find($id, "trafo_id");
+            return view("trafo/edit", compact('errors', 'trafo', 'id'));
+        }
+
+        // normalisasi kosong → null
+        foreach (['pemilik', 'jenis_minyak', 'kelas_isolasi', 'catatan'] as $field) {
+            if ($data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
 
         $this->model->update($id, $data, "trafo_id");
         header("Location: /trafo");
