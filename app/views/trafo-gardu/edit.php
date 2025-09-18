@@ -1,6 +1,18 @@
 <?php startBlock('content') ?>
 <h3>Edit Trafo Gardu</h3>
 
+<?php if (!empty($errors)): ?>
+    <div style="color:red;">
+        <ul>
+            <?php foreach ($errors as $field => $fieldErrors): ?>
+                <?php foreach ((array)$fieldErrors as $err): ?>
+                    <li><?= htmlspecialchars($err, ENT_QUOTES, 'UTF-8') ?></li>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
 <form method="POST" action="/trafo-gardu/<?= $id ?>">
     <input type="hidden" name="_method" value="PUT">
 
@@ -24,13 +36,13 @@
         </select>
     </p>
 
-    <p>Tgl Pasang: <input type="date" name="tgl_pasang" value="<?= htmlspecialchars($trafoGardu['tgl_pasang']) ?>"></p>
-    <p>Tgl Operasi: <input type="date" name="tgl_operasi" value="<?= htmlspecialchars($trafoGardu['tgl_operasi']) ?>"></p>
-    <p>Status Operasi: <input type="text" name="status_operasi" value="<?= htmlspecialchars($trafoGardu['status_operasi']) ?>"></p>
-    <p>Kondisi Fisik: <input type="text" name="kondisi_fisik" value="<?= htmlspecialchars($trafoGardu['kondisi_fisik']) ?>"></p>
-    <p>Posisi Arde: <input type="text" name="posisi_arde" value="<?= htmlspecialchars($trafoGardu['posisi_arde']) ?>"></p>
-    <p>Arah Fasa: <input type="text" name="arah_fasa" value="<?= htmlspecialchars($trafoGardu['arah_fasa']) ?>"></p>
-    <p>Keterangan: <textarea name="keterangan"><?= htmlspecialchars($trafoGardu['keterangan']) ?></textarea></p>
+    <p>Tgl Pasang: <input type="date" name="tgl_pasang" value="<?= htmlspecialchars($trafoGardu['tgl_pasang'] ?? '') ?>"></p>
+    <p>Tgl Operasi: <input type="date" name="tgl_operasi" value="<?= htmlspecialchars($trafoGardu['tgl_operasi'] ?? '') ?>"></p>
+    <p>Status Operasi: <input type="text" name="status_operasi" value="<?= htmlspecialchars($trafoGardu['status_operasi'] ?? '') ?>"></p>
+    <p>Kondisi Fisik: <input type="text" name="kondisi_fisik" value="<?= htmlspecialchars($trafoGardu['kondisi_fisik'] ?? '') ?>"></p>
+    <p>Posisi Arde: <input type="text" name="posisi_arde" value="<?= htmlspecialchars($trafoGardu['posisi_arde'] ?? '') ?>"></p>
+    <p>Arah Fasa: <input type="text" name="arah_fasa" value="<?= htmlspecialchars($trafoGardu['arah_fasa'] ?? '') ?>"></p>
+    <p>Keterangan: <textarea name="keterangan"><?= htmlspecialchars($trafoGardu['keterangan'] ?? '') ?></textarea></p>
 
     <p><button type="submit">Update</button></p>
 </form>

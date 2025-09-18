@@ -1,6 +1,18 @@
 <?php startBlock('content') ?>
 <h3>Tambah Trafo Gardu</h3>
 
+<?php if (!empty($errors)): ?>
+    <div style="color:red;">
+        <ul>
+            <?php foreach ($errors as $field => $fieldErrors): ?>
+                <?php foreach ((array)$fieldErrors as $err): ?>
+                    <li><?= htmlspecialchars($err, ENT_QUOTES, 'UTF-8') ?></li>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
 <form method="POST" action="/trafo-gardu">
     <p>Gardu Distribusi:
         <select name="gd_id" required>

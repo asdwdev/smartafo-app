@@ -35,17 +35,31 @@ class TrafoGarduController
 
     public function store(Request $request)
     {
-        $data = [
-            'gd_id'         => $request->input('gd_id'),
-            'trafo_id'      => $request->input('trafo_id'),
-            'tgl_pasang'    => $request->input('tgl_pasang'),
-            'tgl_operasi'   => $request->input('tgl_operasi'),
-            'status_operasi' => $request->input('status_operasi'),
-            'kondisi_fisik' => $request->input('kondisi_fisik'),
-            'posisi_arde'   => $request->input('posisi_arde'),
-            'arah_fasa'     => $request->input('arah_fasa'),
-            'keterangan'    => $request->input('keterangan'),
-        ];
+        [$valid, $data] = $request->validate([
+            'gd_id'         => 'required|numeric',
+            'trafo_id'      => 'required|numeric',
+            'tgl_pasang'    => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'tgl_operasi'   => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'status_operasi' => 'nullable|max:100',
+            'kondisi_fisik' => 'nullable|max:100',
+            'posisi_arde'   => 'nullable|max:100',
+            'arah_fasa'     => 'nullable|max:32',
+            'keterangan'    => 'nullable',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $garduDistribusis = $this->gdModel->all();
+            $trafos = $this->trafoModel->all();
+            return view("trafo-gardu/create", compact('errors', 'garduDistribusis', 'trafos'));
+        }
+
+        // normalisasi kosong → null
+        foreach (['tgl_pasang', 'tgl_operasi', 'status_operasi', 'kondisi_fisik', 'posisi_arde', 'arah_fasa', 'keterangan'] as $field) {
+            if ($data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
 
         $this->model->create($data);
         header("Location: /trafo-gardu");
@@ -69,17 +83,32 @@ class TrafoGarduController
 
     public function update(Request $request, $id)
     {
-        $data = [
-            'gd_id'         => $request->input('gd_id'),
-            'trafo_id'      => $request->input('trafo_id'),
-            'tgl_pasang'    => $request->input('tgl_pasang'),
-            'tgl_operasi'   => $request->input('tgl_operasi'),
-            'status_operasi' => $request->input('status_operasi'),
-            'kondisi_fisik' => $request->input('kondisi_fisik'),
-            'posisi_arde'   => $request->input('posisi_arde'),
-            'arah_fasa'     => $request->input('arah_fasa'),
-            'keterangan'    => $request->input('keterangan'),
-        ];
+        [$valid, $data] = $request->validate([
+            'gd_id'         => 'required|numeric',
+            'trafo_id'      => 'required|numeric',
+            'tgl_pasang'    => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'tgl_operasi'   => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'status_operasi' => 'nullable|max:100',
+            'kondisi_fisik' => 'nullable|max:100',
+            'posisi_arde'   => 'nullable|max:100',
+            'arah_fasa'     => 'nullable|max:32',
+            'keterangan'    => 'nullable',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $trafoGardu = $this->model->find($id, "trafo_gardu_id");
+            $garduDistribusis = $this->gdModel->all();
+            $trafos = $this->trafoModel->all();
+            return view("trafo-gardu/edit", compact('errors', 'trafoGardu', 'id', 'garduDistribusis', 'trafos'));
+        }
+
+        // normalisasi kosong → null
+        foreach (['tgl_pasang', 'tgl_operasi', 'status_operasi', 'kondisi_fisik', 'posisi_arde', 'arah_fasa', 'keterangan'] as $field) {
+            if ($data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
 
         $this->model->update($id, $data, "trafo_gardu_id");
         header("Location: /trafo-gardu");
