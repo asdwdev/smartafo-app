@@ -10,6 +10,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\PenyulangController;
 use App\Controllers\GarduIndukController;
 use App\Controllers\GarduHubungController;
+use App\Controllers\TrafoTeknisController;
 use App\Controllers\KubikelTeknisController;
 use App\Controllers\GarduDistribusiController;
 
@@ -33,22 +34,19 @@ $router->post("/signup", AuthController::class, "signup");        // optional
 // gardu distribusi routes
 $router->resource("/gardu-induk", GarduIndukController::class);
 
-// gardu penyulang routes
-$router->resource("/penyulang", PenyulangController::class);
+// gardu hubung routes
+$router->resource("/gardu-hubung", GarduHubungController::class);
 
 // gardu distribusi routes
 $router->resource("/gardu-distribusi", GarduDistribusiController::class);
 
-// gardu hubung routes
-$router->resource("/gardu-hubung", GarduHubungController::class);
-
+// trafo teknis routes
+$router->resource("/trafo-teknis", TrafoTeknisController::class);
 
 // kubikel tekniks routes
 $router->resource("/kubikel-teknis", KubikelTeknisController::class);
 
-
-
-// 🚀 resource route
-$router->resource("/users", UserController::class);
+// gardu penyulang routes
+$router->resource("/penyulang", PenyulangController::class);
 
 $router->dispatch($path, $method);
