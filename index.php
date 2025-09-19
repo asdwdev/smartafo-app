@@ -34,8 +34,9 @@ $router->get("/dashboard", HomeController::class, "dashboard");
 // auth routes
 $router->get("/login", AuthController::class, "showLoginForm");
 $router->post("/login", AuthController::class, "login");
-$router->get("/signup", AuthController::class, "showSignupForm"); // optional
-$router->post("/signup", AuthController::class, "signup");        // optional
+$router->get("/signup", AuthController::class, "showSignupForm");
+$router->post("/signup", AuthController::class, "signup");
+$router->get("/logout", AuthController::class, "logout");
 
 // gardu distribusi routes
 $router->resource("/gardu-induk", GarduIndukController::class);

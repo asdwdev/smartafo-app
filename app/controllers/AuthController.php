@@ -94,4 +94,20 @@ class AuthController
         header("Location: /login");
         exit;
     }
+
+    /**
+     * Proses logout user
+     */
+    public function logout()
+    {
+        // hapus session user
+        unset($_SESSION['user']);
+
+        // kalau mau sekalian clear semua session:
+        // session_destroy();
+
+        // redirect ke halaman login
+        header("Location: /login");
+        exit;
+    }
 }
