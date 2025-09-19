@@ -5,8 +5,9 @@
 
 <table border="1" width="100%">
     <tr>
-        <th>GD ID</th>
-        <th>Trafo Gardu ID</th>
+        <th>ID</th>
+        <th>Gardu Distribusi</th>
+        <th>Trafo Gardu</th>
         <th>Nama Jurusan</th>
         <th>Keterangan</th>
         <th>Aksi</th>
@@ -15,13 +16,14 @@
     <?php if (!empty($jurusans)): ?>
         <?php foreach ($jurusans as $j): ?>
             <tr>
+                <td><?= htmlspecialchars($j['jurusan_id']) ?></td>
                 <td><?= htmlspecialchars($j['gd_id']) ?></td>
-                <td><?= htmlspecialchars($j['trafo_gardu_id']) ?></td>
+                <td><?= htmlspecialchars($j['trafo_gardu_id'] ?? '-') ?></td>
                 <td><?= htmlspecialchars($j['nama_jurusan']) ?></td>
-                <td><?= htmlspecialchars($j['keterangan']) ?></td>
+                <td><?= htmlspecialchars($j['keterangan'] ?? '-') ?></td>
                 <td>
                     <a href="/jurusan/<?= $j['jurusan_id'] ?>/edit">Edit</a> |
-                    <form method="POST" action="/jurusan/<?= $j['jurusan_id'] ?>" style="display:inline">
+                    <form method="POST" action="/jurusan/<?= $j['jurusan_id'] ?>" style="display:inline" onsubmit="return confirm('Yakin hapus data ini?')">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit">Hapus</button>
                     </form>
@@ -30,7 +32,7 @@
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td colspan="5">Belum ada jurusan.</td>
+            <td colspan="6">Belum ada jurusan.</td>
         </tr>
     <?php endif; ?>
 </table>
