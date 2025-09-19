@@ -35,40 +35,28 @@ class TrafoGiController
 
     public function store(Request $request)
     {
-        // Validasi input
-        $errors = [];
-        if (!$request->input('gi_id')) {
-            $errors[] = "Gardu Induk wajib dipilih.";
-        }
-        if (!$request->input('trafo_id')) {
-            $errors[] = "Trafo wajib dipilih.";
+        [$valid, $data] = $request->validate([
+            'gi_id'        => 'required|exists:gardu_induk,gi_id',
+            'trafo_id'     => 'required|exists:trafo,trafo_id',
+            'tgl_pasang'   => 'required|date',
+            'tgl_operasi'  => 'required|date',
+            'status_operasi' => 'required|max:255',
+            'kondisi_fisik'  => 'required|max:255',
+            'posisi_arde'    => 'required|max:255',
+            'arah_fasa'      => 'required|max:255',
+            'keterangan'     => 'required|max:1000',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $old = $request->all();
+            $garduInduks = $this->giModel->all();
+            $trafos = $this->trafoModel->all();
+            return view("trafo-gi/create", compact('errors', 'old', 'garduInduks', 'trafos'));
         }
 
-        if (!empty($errors)) {
-            $_SESSION['error'] = implode(" ", $errors);
-            header("Location: /trafo-gi/create");
-            exit;
-        }
-
-        $data = [
-            'gi_id'          => $request->input('gi_id'),
-            'trafo_id'       => $request->input('trafo_id'),
-            'tgl_pasang'     => $request->input('tgl_pasang') ?: null,
-            'tgl_operasi'    => $request->input('tgl_operasi') ?: null,
-            'status_operasi' => $request->input('status_operasi'),
-            'kondisi_fisik'  => $request->input('kondisi_fisik'),
-            'posisi_arde'    => $request->input('posisi_arde'),
-            'arah_fasa'      => $request->input('arah_fasa'),
-            'keterangan'     => $request->input('keterangan'),
-        ];
-
-        try {
-            $this->model->create($data);
-            header("Location: /trafo-gi");
-        } catch (\Exception $e) {
-            $_SESSION['error'] = "Gagal simpan Trafo GI: " . $e->getMessage();
-            header("Location: /trafo-gi/create");
-        }
+        $this->model->create($data);
+        header("Location: /trafo-gi");
         exit;
     }
 
@@ -83,56 +71,48 @@ class TrafoGiController
         $trafoGi = $this->model->find($id, "trafo_gi_id");
         $garduInduks = $this->giModel->all();
         $trafos = $this->trafoModel->all();
-
         return view("trafo-gi/edit", compact('trafoGi', 'id', 'garduInduks', 'trafos'));
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi input
-        $errors = [];
-        if (!$request->input('gi_id')) {
-            $errors[] = "Gardu Induk wajib dipilih.";
-        }
-        if (!$request->input('trafo_id')) {
-            $errors[] = "Trafo wajib dipilih.";
+        [$valid, $data] = $request->validate([
+            'gi_id'        => 'required|exists:gardu_induk,gi_id',
+            'trafo_id'     => 'required|exists:trafo,trafo_id',
+            'tgl_pasang'   => 'required|date',
+            'tgl_operasi'  => 'required|date',
+            'status_operasi' => 'required|max:255',
+            'kondisi_fisik'  => 'required|max:255',
+            'posisi_arde'    => 'required|max:255',
+            'arah_fasa'      => 'required|max:255',
+            'keterangan'     => 'required|max:1000',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $trafoGi = $this->model->find($id, "trafo_gi_id");
+            $garduInduks = $this->giModel->all();
+            $trafos = $this->trafoModel->all();
+            return view("trafo-gi/edit", compact('errors', 'trafoGi', 'id', 'garduInduks', 'trafos'));
         }
 
-        if (!empty($errors)) {
-            $_SESSION['error'] = implode(" ", $errors);
-            header("Location: /trafo-gi/{$id}/edit");
-            exit;
-        }
-
-        $data = [
-            'gi_id'          => $request->input('gi_id'),
-            'trafo_id'       => $request->input('trafo_id'),
-            'tgl_pasang'     => $request->input('tgl_pasang') ?: null,
-            'tgl_operasi'    => $request->input('tgl_operasi') ?: null,
-            'status_operasi' => $request->input('status_operasi'),
-            'kondisi_fisik'  => $request->input('kondisi_fisik'),
-            'posisi_arde'    => $request->input('posisi_arde'),
-            'arah_fasa'      => $request->input('arah_fasa'),
-            'keterangan'     => $request->input('keterangan'),
-        ];
-
-        try {
-            $this->model->update($id, $data, "trafo_gi_id");
-            header("Location: /trafo-gi");
-        } catch (\Exception $e) {
-            $_SESSION['error'] = "Gagal update Trafo GI: " . $e->getMessage();
-            header("Location: /trafo-gi/{$id}/edit");
-        }
+        $this->model->update($id, $data, "trafo_gi_id");
+        header("Location: /trafo-gi");
         exit;
     }
 
     public function destroy($id)
     {
-        try {
-            $this->model->delete($id, "trafo_gi_id");
-        } catch (\Exception $e) {
-            $_SESSION['error'] = "Gagal hapus Trafo GI: " . $e->getMessage();
-        }
+        // Cek relasi jika perlu (misal ada model lain terkait TrafoGi)
+        // $relatedModel = new SomeRelatedModel();
+        // $related = $relatedModel->whereAll('trafo_gi_id', $id);
+        // if (!empty($related)) {
+        //     $_SESSION['error'] = "Tidak bisa hapus, masih ada data terkait.";
+        //     header("Location: /trafo-gi");
+        //     exit;
+        // }
+
+        $this->model->delete($id, "trafo_gi_id");
         header("Location: /trafo-gi");
         exit;
     }
