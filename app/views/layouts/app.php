@@ -8,15 +8,14 @@
     <script src="https://unpkg.com/alpinejs" defer></script>
 </head>
 
-<body class="h-screen flex bg-gray-50 text-gray-900">
+<body x-data="{ sidebarOpen: true }" class="h-screen flex bg-gray-50 text-gray-900">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r shadow-sm flex flex-col">
+    <aside :class="sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'"
+        class="fixed inset-y-0 left-0 bg-white border-r shadow-sm flex flex-col transform transition-transform duration-200 ease-in-out z-40">
         <!-- Logo & Title -->
         <div class="p-6 flex items-center space-x-3 border-b">
-            <div class="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-                JD
-            </div>
+            <div class="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">JD</div>
             <div>
                 <h1 class="text-lg font-semibold text-gray-800">Jardist Admin</h1>
                 <p class="text-xs text-gray-500">Distribusi PLN</p>
@@ -137,36 +136,39 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col">
+    <main :class="sidebarOpen ? 'lg:ml-64' : 'ml-0'" class="flex-1 flex flex-col transition-all duration-200 ease-in-out">
         <!-- Topbar -->
         <header class="h-16 bg-white shadow flex items-center justify-between px-6">
+
+            <!-- Tombol Toggle Sidebar -->
+            <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md hover:bg-gray-100">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
             <h2 class="text-lg font-semibold"><?= $title ?? 'Dashboard' ?></h2>
 
             <!-- User Dropdown -->
             <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open"
-                    class="flex items-center space-x-2 focus:outline-none">
+                <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
                     <div class="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
                         <?= strtoupper(substr($_SESSION['user']['full_name'] ?? 'G', 0, 1)) ?>
                     </div>
                     <span class="hidden sm:block text-sm font-medium text-gray-700">
                         <?= $_SESSION['user']['full_name'] ?? 'Guest' ?>
                     </span>
-                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
 
                 <!-- Dropdown Menu -->
-                <div x-show="open" @click.away="open = false"
-                    x-transition
+                <div x-show="open" @click.away="open = false" x-transition
                     class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border py-2 z-50">
-                    <a href="/logout"
-                        class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                        Logout
-                    </a>
+                    <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</a>
                 </div>
             </div>
         </header>
