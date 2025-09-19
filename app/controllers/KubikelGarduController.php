@@ -38,14 +38,14 @@ class KubikelGarduController
         [$valid, $data] = $request->validate([
             'gd_id'       => 'required|numeric',
             'kubikel_id'  => 'required|numeric',
-            'tgl_pasang'  => 'nullable|date',
-            'tgl_operasi' => 'nullable|date',
-            'status_rc'   => 'nullable|max:100',
-            'arah_gardu'  => 'nullable|max:100',
-            'ct_info'     => 'nullable|max:200',
-            'vt_info'     => 'nullable|max:200',
-            'relay_info'  => 'nullable|max:200',
-            'fuse_info'   => 'nullable|max:200',
+            'tgl_pasang'  => 'required|date',
+            'tgl_operasi' => 'required|date',
+            'status_rc'   => 'required|max:100',
+            'arah_gardu'  => 'required|max:100',
+            'ct_info'     => 'required|max:200',
+            'vt_info'     => 'required|max:200',
+            'relay_info'  => 'required|max:200',
+            'fuse_info'   => 'required|max:200',
             'keterangan'  => 'nullable',
         ]);
 
@@ -53,7 +53,8 @@ class KubikelGarduController
             $errors          = $data;
             $garduDistribusi = $this->garduModel->all();
             $kubikels        = $this->kubikelModel->all();
-            return view("kubikel-gardu/create", compact('errors', 'garduDistribusi', 'kubikels'));
+            $old             = $request->all(); // <---- TAMBAHKAN INI
+            return view("kubikel-gardu/create", compact('errors', 'garduDistribusi', 'kubikels', 'old'));
         }
 
         // Cek foreign key manual
@@ -100,14 +101,14 @@ class KubikelGarduController
         [$valid, $data] = $request->validate([
             'gd_id'       => 'required|numeric',
             'kubikel_id'  => 'required|numeric',
-            'tgl_pasang'  => 'nullable|date',
-            'tgl_operasi' => 'nullable|date',
-            'status_rc'   => 'nullable|max:100',
-            'arah_gardu'  => 'nullable|max:100',
-            'ct_info'     => 'nullable|max:200',
-            'vt_info'     => 'nullable|max:200',
-            'relay_info'  => 'nullable|max:200',
-            'fuse_info'   => 'nullable|max:200',
+            'tgl_pasang'  => 'required|date',
+            'tgl_operasi' => 'required|date',
+            'status_rc'   => 'required|max:100',
+            'arah_gardu'  => 'required|max:100',
+            'ct_info'     => 'required|max:200',
+            'vt_info'     => 'required|max:200',
+            'relay_info'  => 'required|max:200',
+            'fuse_info'   => 'required|max:200',
             'keterangan'  => 'nullable',
         ]);
 

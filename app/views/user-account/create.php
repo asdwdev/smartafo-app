@@ -1,29 +1,118 @@
 <?php startBlock('content') ?>
-<h3>TAMBAH USER ACCOUNT</h3>
+<div class="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8">
+    <h3 class="text-xl font-bold text-gray-800 mb-6">Tambah User Account</h3>
 
-<form method="POST" action="/user-account">
-    <label>NIP: <input type="text" name="nip"></label><br><br>
-    <label>Nama Lengkap: <input type="text" name="full_name"></label><br><br>
-    <label>Email PLN: <input type="email" name="email_pln"></label><br><br>
-    <label>Area: <input type="text" name="area"></label><br><br>
-    <label>Level User:
-        <select name="level_user">
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Staff">Staff</option>
-        </select>
-    </label><br><br>
-    <label>Password: <input type="password" name="password"></label><br><br>
-    <label>Status Approval:
-        <select name="is_approved">
-            <option value="FALSE">Belum Approved</option>
-            <option value="TRUE">Approved</option>
-        </select>
-    </label><br><br>
+    <!-- Form -->
+    <form method="POST" action="/user-account" class="space-y-5">
 
-    <button type="button" onclick="window.history.back()">Back</button>
-    <button type="submit">Submit</button>
-</form>
+        <!-- NIP -->
+        <div>
+            <label for="nip" class="block text-sm font-medium text-gray-700">NIP</label>
+            <input type="text" id="nip" name="nip"
+                value="<?= htmlspecialchars($old['nip'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['nip']) ? 'border-red-500' : 'border-gray-400' ?> 
+                       bg-white text-gray-900 shadow-sm focus:border-blue-500 
+                       focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+            <?php if (!empty($errors['nip'])): ?>
+                <p class="mt-1 text-sm text-red-600"><?= htmlspecialchars($errors['nip'][0], ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Nama Lengkap -->
+        <div>
+            <label for="full_name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+            <input type="text" id="full_name" name="full_name"
+                value="<?= htmlspecialchars($old['full_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['full_name']) ? 'border-red-500' : 'border-gray-400' ?> 
+                       bg-white text-gray-900 shadow-sm focus:border-blue-500 
+                       focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+            <?php if (!empty($errors['full_name'])): ?>
+                <p class="mt-1 text-sm text-red-600"><?= htmlspecialchars($errors['full_name'][0], ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Email PLN -->
+        <div>
+            <label for="email_pln" class="block text-sm font-medium text-gray-700">Email PLN</label>
+            <input type="email" id="email_pln" name="email_pln"
+                value="<?= htmlspecialchars($old['email_pln'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['email_pln']) ? 'border-red-500' : 'border-gray-400' ?> 
+                       bg-white text-gray-900 shadow-sm focus:border-blue-500 
+                       focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+            <?php if (!empty($errors['email_pln'])): ?>
+                <p class="mt-1 text-sm text-red-600"><?= htmlspecialchars($errors['email_pln'][0], ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Area -->
+        <div>
+            <label for="area" class="block text-sm font-medium text-gray-700">Area</label>
+            <input type="text" id="area" name="area"
+                value="<?= htmlspecialchars($old['area'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['area']) ? 'border-red-500' : 'border-gray-400' ?> 
+                       bg-white text-gray-900 shadow-sm focus:border-blue-500 
+                       focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+            <?php if (!empty($errors['area'])): ?>
+                <p class="mt-1 text-sm text-red-600"><?= htmlspecialchars($errors['area'][0], ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Level User -->
+        <div>
+            <label for="level_user" class="block text-sm font-medium text-gray-700">Level User</label>
+            <select id="level_user" name="level_user"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['level_user']) ? 'border-red-500' : 'border-gray-400' ?> 
+                       bg-white text-gray-900 shadow-sm focus:border-blue-500 
+                       focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+                <option value="Admin" <?= ($old['level_user'] ?? '') == 'Admin' ? 'selected' : '' ?>>Admin</option>
+                <option value="Manager" <?= ($old['level_user'] ?? '') == 'Manager' ? 'selected' : '' ?>>Manager</option>
+                <option value="Staff" <?= ($old['level_user'] ?? '') == 'Staff' ? 'selected' : '' ?>>Staff</option>
+            </select>
+            <?php if (!empty($errors['level_user'])): ?>
+                <p class="mt-1 text-sm text-red-600"><?= htmlspecialchars($errors['level_user'][0], ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Password -->
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['password']) ? 'border-red-500' : 'border-gray-400' ?> 
+                       bg-white text-gray-900 shadow-sm focus:border-blue-500 
+                       focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+            <?php if (!empty($errors['password'])): ?>
+                <p class="mt-1 text-sm text-red-600"><?= htmlspecialchars($errors['password'][0], ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Status Approval -->
+        <div>
+            <label for="is_approved" class="block text-sm font-medium text-gray-700">Status Approval</label>
+            <select id="is_approved" name="is_approved"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['is_approved']) ? 'border-red-500' : 'border-gray-400' ?> 
+                       bg-white text-gray-900 shadow-sm focus:border-blue-500 
+                       focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+                <option value="FALSE" <?= ($old['is_approved'] ?? '') == 'FALSE' ? 'selected' : '' ?>>Belum Approved</option>
+                <option value="TRUE" <?= ($old['is_approved'] ?? '') == 'TRUE' ? 'selected' : '' ?>>Approved</option>
+            </select>
+            <?php if (!empty($errors['is_approved'])): ?>
+                <p class="mt-1 text-sm text-red-600"><?= htmlspecialchars($errors['is_approved'][0], ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-between pt-4">
+            <button type="button" onclick="window.history.back()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
+                Back
+            </button>
+            <button type="submit"
+                class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
 <?php endBlock() ?>
 
 <?php extend('layouts/app') ?>
