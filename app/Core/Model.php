@@ -16,7 +16,7 @@ abstract class Model
 
     public function all()
     {
-        $stmt = $this->db->query("SELECT * FROM {$this->table} ORDER BY created_at DESC");
+        $stmt = $this->db->query("SELECT * FROM {$this->table} ORDER BY updated_at DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
