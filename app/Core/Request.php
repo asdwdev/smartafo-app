@@ -80,7 +80,11 @@ class Request
      */
     public function validate(array $rules): array
     {
-        $validator = new Validator($this->all(), $rules);
+        // ambil koneksi DB dari Database
+        $pdo = \App\Core\Database::getConnection();
+
+        // lempar koneksi ke Validator
+        $validator = new Validator($this->all(), $rules, $pdo);
 
         if ($validator->fails()) {
             return [false, $validator->errors()];

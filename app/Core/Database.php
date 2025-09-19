@@ -9,14 +9,17 @@ class Database
 {
     private static $instance = null;
 
+    /**
+     * Ambil instance PDO (singleton)
+     */
     public static function getInstance()
     {
         if (self::$instance === null) {
-            $host = "127.0.0.1";   // sesuaikan
-            $port = "5432";        // default postgres
-            $dbname = "smartafo_db";  // ganti sesuai DB lo
-            $user = "postgres";    // username postgres
-            $password = "admin"; // password postgres
+            $host = "127.0.0.1";     // sesuaikan
+            $port = "5432";          // default postgres
+            $dbname = "smartafo_db"; // ganti sesuai DB lo
+            $user = "postgres";      // username postgres
+            $password = "admin";     // password postgres
 
             try {
                 self::$instance = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);
@@ -27,5 +30,13 @@ class Database
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Alias biar kompatibel
+     */
+    public static function getConnection()
+    {
+        return self::getInstance();
     }
 }
