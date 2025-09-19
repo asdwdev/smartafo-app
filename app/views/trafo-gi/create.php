@@ -1,8 +1,16 @@
 <?php startBlock('content') ?>
 <h3>Tambah Trafo GI</h3>
 
+<?php if (!empty($_SESSION['error'])): ?>
+    <div style="color: red; margin-bottom: 10px;">
+        <?= htmlspecialchars($_SESSION['error']);
+        unset($_SESSION['error']); ?>
+    </div>
+<?php endif; ?>
+
 <form method="POST" action="/trafo-gi">
-    <p>Gardu Induk:
+    <p>
+        <label>Gardu Induk:</label>
         <select name="gi_id" required>
             <option value="">-- Pilih GI --</option>
             <?php foreach ($garduInduks as $gi): ?>
@@ -11,7 +19,8 @@
         </select>
     </p>
 
-    <p>Trafo:
+    <p>
+        <label>Trafo:</label>
         <select name="trafo_id" required>
             <option value="">-- Pilih Trafo --</option>
             <?php foreach ($trafos as $t): ?>
@@ -20,13 +29,14 @@
         </select>
     </p>
 
-    <p>Tgl Pasang: <input type="date" name="tgl_pasang"></p>
-    <p>Tgl Operasi: <input type="date" name="tgl_operasi"></p>
-    <p>Status Operasi: <input type="text" name="status_operasi"></p>
-    <p>Kondisi Fisik: <input type="text" name="kondisi_fisik"></p>
-    <p>Posisi Arde: <input type="text" name="posisi_arde"></p>
-    <p>Arah Fasa: <input type="text" name="arah_fasa"></p>
-    <p>Keterangan: <textarea name="keterangan"></textarea></p>
+    <p><label>Tgl Pasang:</label> <input type="date" name="tgl_pasang"></p>
+    <p><label>Tgl Operasi:</label> <input type="date" name="tgl_operasi"></p>
+    <p><label>Status Operasi:</label> <input type="text" name="status_operasi"></p>
+    <p><label>Kondisi Fisik:</label> <input type="text" name="kondisi_fisik"></p>
+    <p><label>Posisi Arde:</label> <input type="text" name="posisi_arde"></p>
+    <p><label>Arah Fasa:</label> <input type="text" name="arah_fasa"></p>
+    <p><label>Keterangan:</label> <textarea name="keterangan"></textarea></p>
+
     <p><button type="submit">Simpan</button></p>
 </form>
 <?php endBlock() ?>
