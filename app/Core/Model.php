@@ -77,4 +77,24 @@ abstract class Model
         $stmt->execute(['value' => $value]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function rawQuery($sql, $params = [])
+    {
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function join($joinTable, $localKey, $foreignKey, $columns = "*", $orderBy = null)
+    {
+        $sql = "SELECT {$columns} 
+            FROM {$this->table} AS t
+            JOIN {$joinTable} AS j ON t.{$localKey} = j.{$foreignKey}";
+
+        if ($orderBy) {
+            $sql .= " ORDER BY {$orderBy}";
+        }
+
+        return $this->rawQuery($sql);
+    }
 }

@@ -1,49 +1,98 @@
 <?php startBlock('content') ?>
-<h3>TAMBAH DATA PENYULANG</h3>
+<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-8">
+    <h3 class="text-xl font-bold text-gray-800 mb-6">Tambah Penyulang</h3>
 
-<?php if (!empty($errors)): ?>
-    <div style="color:red; font-weight:bold; margin-bottom:10px;">
-        <ul>
-            <?php foreach ($errors as $fieldErrors): ?>
-                <?php foreach ($fieldErrors as $error): ?>
-                    <li><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></li>
+    <!-- Form -->
+    <form method="POST" action="/penyulang" class="space-y-5">
+
+        <!-- Kode Penyulang -->
+        <div>
+            <label for="kode_penyulang" class="block text-sm font-medium text-gray-700">Kode Penyulang</label>
+            <input type="text" id="kode_penyulang" name="kode_penyulang"
+                value="<?= htmlspecialchars($old['kode_penyulang'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border 
+                    <?= !empty($errors['kode_penyulang']) ? 'border-red-500' : 'border-gray-400' ?> 
+                    bg-white text-gray-900 shadow-sm 
+                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+
+            <?php if (!empty($errors['kode_penyulang'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['kode_penyulang'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Nama Penyulang -->
+        <div>
+            <label for="nama_penyulang" class="block text-sm font-medium text-gray-700">Nama Penyulang</label>
+            <input type="text" id="nama_penyulang" name="nama_penyulang"
+                value="<?= htmlspecialchars($old['nama_penyulang'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border 
+                    <?= !empty($errors['nama_penyulang']) ? 'border-red-500' : 'border-gray-400' ?> 
+                    bg-white text-gray-900 shadow-sm 
+                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+
+            <?php if (!empty($errors['nama_penyulang'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['nama_penyulang'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Tegangan (kV) -->
+        <div>
+            <label for="tegangan_kv" class="block text-sm font-medium text-gray-700">Tegangan (kV)</label>
+            <input type="number" id="tegangan_kv" name="tegangan_kv"
+                value="<?= htmlspecialchars((string)($old['tegangan_kv'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border 
+                    <?= !empty($errors['tegangan_kv']) ? 'border-red-500' : 'border-gray-400' ?> 
+                    bg-white text-gray-900 shadow-sm 
+                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+
+            <?php if (!empty($errors['tegangan_kv'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['tegangan_kv'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Gardu Induk -->
+        <div>
+            <label for="gi_id" class="block text-sm font-medium text-gray-700">Gardu Induk</label>
+            <select id="gi_id" name="gi_id" required
+                class="mt-1 block w-full rounded-lg border 
+                    <?= !empty($errors['gi_id']) ? 'border-red-500' : 'border-gray-400' ?> 
+                    bg-white text-gray-900 shadow-sm 
+                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
+                <option value="">-- Pilih Gardu Induk --</option>
+                <?php foreach ($garduInduk as $gi): ?>
+                    <option value="<?= $gi['gi_id'] ?>"
+                        <?= ($old['gi_id'] ?? '') == $gi['gi_id'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($gi['nama_gi'], ENT_QUOTES, 'UTF-8') ?>
+                    </option>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php endif; ?>
+            </select>
 
-<form method="POST" action="/penyulang">
-    <label>Kode Penyulang:
-        <input type="text" name="kode_penyulang"
-            value="<?= htmlspecialchars($old['kode_penyulang'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
-    </label><br><br>
+            <?php if (!empty($errors['gi_id'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['gi_id'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
 
-    <label>Nama Penyulang:
-        <input type="text" name="nama_penyulang"
-            value="<?= htmlspecialchars($old['nama_penyulang'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-            required>
-    </label><br><br>
-
-    <label>Tegangan (kV):
-        <input type="number" name="tegangan_kv"
-            value="<?= htmlspecialchars((string)($old['tegangan_kv'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
-    </label><br><br>
-
-    <label>Gardu Induk:
-        <select name="gi_id" required>
-            <?php foreach ($garduInduk as $gi): ?>
-                <option value="<?= $gi['gi_id'] ?>"
-                    <?= ($old['gi_id'] ?? '') == $gi['gi_id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($gi['nama_gi'], ENT_QUOTES, 'UTF-8') ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </label><br><br>
-
-    <button type="button" onclick="window.history.back()">Back</button>
-    <button type="submit">Submit</button>
-</form>
+        <!-- Buttons -->
+        <div class="flex justify-between pt-4">
+            <button type="button" onclick="window.history.back()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
+                Back
+            </button>
+            <button type="submit"
+                class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
 <?php endBlock() ?>
 
 <?php extend('layouts/app') ?>

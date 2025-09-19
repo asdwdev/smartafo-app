@@ -17,9 +17,18 @@ class PenyulangController
 
     public function index()
     {
-        $penyulangs = $this->model->all();
+        $penyulangs = $this->model->join(
+            "gardu_induk",        // tabel relasi
+            "gi_id",              // foreign key di penyulang
+            "gi_id",              // primary key di gardu_induk
+            "t.*, j.nama_gi",     // kolom yang diambil
+            "t.created_at DESC"   // order
+        );
+
         return view("penyulang/index", compact('penyulangs'));
     }
+
+
 
     public function create()
     {
@@ -32,9 +41,9 @@ class PenyulangController
     public function store(Request $request)
     {
         [$valid, $data] = $request->validate([
-            'kode_penyulang' => 'nullable|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,NULL,penyulang_id,gi_id,' . $request->input('gi_id'),
+            'kode_penyulang' => 'required|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,NULL,penyulang_id,gi_id,' . $request->input('gi_id'),
             'nama_penyulang' => 'required|max:128|unique:penyulang,nama_penyulang,NULL,penyulang_id,gi_id,' . $request->input('gi_id'),
-            'tegangan_kv'    => 'nullable|numeric',
+            'tegangan_kv'    => 'required|numeric|max_value:999.999',
             'gi_id'          => 'required|numeric',
         ]);
 
@@ -46,10 +55,6 @@ class PenyulangController
 
             return view("penyulang/create", compact('errors', 'garduInduk'));
         }
-
-        // normalisasi kosong → null
-        $data['kode_penyulang'] = $data['kode_penyulang'] === '' ? null : $data['kode_penyulang'];
-        $data['tegangan_kv']    = $data['tegangan_kv'] === '' ? null : $data['tegangan_kv'];
 
         $this->model->create($data);
         header("Location: /penyulang");
@@ -75,9 +80,9 @@ class PenyulangController
     public function update(Request $request, $id)
     {
         [$valid, $data] = $request->validate([
-            'kode_penyulang' => "nullable|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,$id,penyulang_id,gi_id," . $request->input('gi_id'),
+            'kode_penyulang' => "required|max:32|regex:/^[A-Za-z0-9_-]+$/|unique:penyulang,kode_penyulang,$id,penyulang_id,gi_id," . $request->input('gi_id'),
             'nama_penyulang' => "required|max:128|unique:penyulang,nama_penyulang,$id,penyulang_id,gi_id," . $request->input('gi_id'),
-            'tegangan_kv'    => 'nullable|numeric',
+            'tegangan_kv'    => 'required|numeric|max_value:999.999',
             'gi_id'          => 'required|numeric',
         ]);
 
@@ -90,10 +95,6 @@ class PenyulangController
 
             return view("penyulang/edit", compact('errors', 'penyulang', 'garduInduk', 'id'));
         }
-
-        // normalisasi kosong → null
-        $data['kode_penyulang'] = $data['kode_penyulang'] === '' ? null : $data['kode_penyulang'];
-        $data['tegangan_kv']    = $data['tegangan_kv'] === '' ? null : $data['tegangan_kv'];
 
         $this->model->update($id, $data, "penyulang_id");
         header("Location: /penyulang");
