@@ -37,7 +37,7 @@ class JurusanController
     {
         [$valid, $data] = $request->validate([
             'gd_id'         => 'required|numeric',
-            'trafo_gardu_id' => 'nullable|numeric',
+            'trafo_gardu_id' => 'required|numeric',
             'nama_jurusan'  => 'required|max:128',
             'keterangan'    => 'nullable',
         ]);
@@ -93,7 +93,7 @@ class JurusanController
     {
         [$valid, $data] = $request->validate([
             'gd_id'         => 'required|numeric',
-            'trafo_gardu_id' => 'nullable|numeric',
+            'trafo_gardu_id' => 'required|numeric',
             'nama_jurusan'  => 'required|max:128',
             'keterangan'    => 'nullable',
         ]);
