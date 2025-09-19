@@ -34,7 +34,19 @@ class AuthController
         $user      = $userModel->where('email_pln', $data['email_pln']);
 
         // cek user & password sekaligus
-        if (!$user || !password_verify($data['password'], $user['password_hash'])) {
+        $passwordValid = false;
+        if ($user) {
+            // Try bcrypt first (newer format)
+            if (password_verify($data['password'], $user['password_hash'])) {
+                $passwordValid = true;
+            }
+            // Try SHA256 (legacy format)
+            elseif (hash('sha256', $data['password']) === $user['password_hash']) {
+                $passwordValid = true;
+            }
+        }
+        
+        if (!$user || !$passwordValid) {
             $errors['login'][] = "Email atau password salah!";
             return view('auth/login', compact('errors'));
         }

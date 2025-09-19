@@ -5,8 +5,8 @@
         <h2 class="text-2xl font-bold text-gray-800">Master Trafo GI</h2>
         <div class="flex items-center gap-3">
             <!-- Search -->
-            <div class="relative">
-                <input type="text" placeholder="Cari Trafo GI..."
+            <form method="GET" action="/trafo-gi" class="relative">
+                <input type="text" name="search" placeholder="Cari berdasarkan keterangan..." value="<?= htmlspecialchars($search ?? '', ENT_QUOTES, 'UTF-8') ?>"
                     class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 bg-gray-50 
                            focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
                            text-sm w-64">
@@ -18,7 +18,20 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-            </div>
+                <!-- Hidden inputs to preserve pagination -->
+                <?php if (isset($_GET['page']) && $_GET['page'] != 1): ?>
+                    <input type="hidden" name="page" value="1">
+                <?php endif; ?>
+            </form>
+
+            <!-- Clear Search Button (only show when searching) -->
+            <?php if (!empty($search)): ?>
+                <a href="/trafo-gi" class="text-gray-400 hover:text-gray-600 transition-colors" title="Hapus Pencarian">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            <?php endif; ?>
 
             <!-- Tambah -->
             <a href="/trafo-gi/create"
@@ -92,14 +105,125 @@
                 <?php else: ?>
                     <tr>
                         <td colspan="10" class="px-6 py-6 text-center text-gray-500 text-sm">
-                            Belum ada data Trafo GI.
+                            <?php if (!empty($search)): ?>
+                                Tidak ada data Trafo GI yang sesuai dengan pencarian "<strong><?= htmlspecialchars($search, ENT_QUOTES, 'UTF-8') ?></strong>".
+                                <br>
+                                <a href="/trafo-gi" class="text-blue-600 hover:text-blue-800 underline mt-2 inline-block">
+                                    Lihat semua data
+                                </a>
+                            <?php else: ?>
+                                Belum ada data Trafo GI.
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination and Info -->
+    <?php if (isset($pagination) && $pagination['total_records'] > 0): ?>
+        <div class="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <!-- Records Info -->
+            <div class="text-sm text-gray-600">
+                Menampilkan 
+                <span class="font-medium"><?= (($pagination['current_page'] - 1) * $pagination['per_page']) + 1 ?></span>
+                sampai 
+                <span class="font-medium"><?= min($pagination['current_page'] * $pagination['per_page'], $pagination['total_records']) ?></span>
+                dari 
+                <span class="font-medium"><?= $pagination['total_records'] ?></span>
+                data
+                <?php if (!empty($search)): ?>
+                    untuk pencarian "<span class="font-medium"><?= htmlspecialchars($search, ENT_QUOTES, 'UTF-8') ?></span>"
+                <?php endif; ?>
+            </div>
+
+            <!-- Pagination Controls -->
+            <?php if ($pagination['total_pages'] > 1): ?>
+                <div class="flex items-center gap-2">
+                    <!-- Per Page Selector -->
+                    <div class="flex items-center gap-2 text-sm">
+                        <span class="text-gray-600">Per halaman:</span>
+                        <select onchange="changePerPage(this.value)" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                            <option value="10" <?= $pagination['per_page'] == 10 ? 'selected' : '' ?>>10</option>
+                            <option value="25" <?= $pagination['per_page'] == 25 ? 'selected' : '' ?>>25</option>
+                            <option value="50" <?= $pagination['per_page'] == 50 ? 'selected' : '' ?>>50</option>
+                            <option value="100" <?= $pagination['per_page'] == 100 ? 'selected' : '' ?>>100</option>
+                        </select>
+                    </div>
+
+                    <!-- Page Navigation -->
+                    <div class="flex items-center gap-1">
+                        <!-- Previous -->
+                        <?php if ($pagination['has_prev']): ?>
+                            <a href="<?= buildPaginationUrl($pagination['prev_page']) ?>" 
+                               class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50">
+                                ‹
+                            </a>
+                        <?php else: ?>
+                            <span class="px-3 py-1 text-sm bg-gray-100 border border-gray-300 rounded text-gray-400">‹</span>
+                        <?php endif; ?>
+
+                        <!-- Page Numbers -->
+                        <?php
+                        $start = max(1, $pagination['current_page'] - 2);
+                        $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
+                        
+                        if ($start > 1): ?>
+                            <a href="<?= buildPaginationUrl(1) ?>" class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50">1</a>
+                            <?php if ($start > 2): ?>
+                                <span class="px-2 py-1 text-sm text-gray-500">...</span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <?php if ($i == $pagination['current_page']): ?>
+                                <span class="px-3 py-1 text-sm bg-blue-600 text-white border border-blue-600 rounded"><?= $i ?></span>
+                            <?php else: ?>
+                                <a href="<?= buildPaginationUrl($i) ?>" class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50"><?= $i ?></a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+
+                        <?php if ($end < $pagination['total_pages']): ?>
+                            <?php if ($end < $pagination['total_pages'] - 1): ?>
+                                <span class="px-2 py-1 text-sm text-gray-500">...</span>
+                            <?php endif; ?>
+                            <a href="<?= buildPaginationUrl($pagination['total_pages']) ?>" class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50"><?= $pagination['total_pages'] ?></a>
+                        <?php endif; ?>
+
+                        <!-- Next -->
+                        <?php if ($pagination['has_next']): ?>
+                            <a href="<?= buildPaginationUrl($pagination['next_page']) ?>" 
+                               class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50">
+                                ›
+                            </a>
+                        <?php else: ?>
+                            <span class="px-3 py-1 text-sm bg-gray-100 border border-gray-300 rounded text-gray-400">›</span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 </div>
+
+<script>
+function changePerPage(value) {
+    const url = new URL(window.location);
+    url.searchParams.set('per_page', value);
+    url.searchParams.set('page', '1'); // Reset to first page
+    window.location = url.toString();
+}
+</script>
+
+<?php
+// Helper function to build pagination URLs
+function buildPaginationUrl($page) {
+    $params = $_GET;
+    $params['page'] = $page;
+    return '/trafo-gi?' . http_build_query($params);
+}
+?>
 <?php endBlock() ?>
 
 <?php extend('layouts/app') ?>

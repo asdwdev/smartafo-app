@@ -22,8 +22,23 @@ class GarduDistribusiController
 
     public function index()
     {
-        $gardus = $this->model->all();
-        return view("gardu-distribusi/index", compact('gardus'));
+        $page = (int)($_GET['page'] ?? 1);
+        $perPage = (int)($_GET['per_page'] ?? 10);
+        $search = $_GET['search'] ?? '';
+        
+        // Validate page number
+        if ($page < 1) $page = 1;
+        
+        // Validate per_page (max 100)
+        if ($perPage > 100) $perPage = 100;
+        if ($perPage < 1) $perPage = 10;
+
+        $result = $this->model->paginate($page, $perPage, $search);
+        
+        $gardus = $result['data'];
+        $pagination = $result['pagination'];
+        
+        return view("gardu-distribusi/index", compact('gardus', 'pagination', 'search'));
     }
 
     public function create()

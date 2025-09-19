@@ -19,7 +19,7 @@ class Database
             $port = "5432";          // default postgres
             $dbname = "smartafo_db"; // ganti sesuai DB lo
             $user = "postgres";      // username postgres
-            $password = "admin";     // password postgres
+            $password = "password";          // password postgres (kosong untuk Laragon default)
 
             try {
                 self::$instance = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);

@@ -22,8 +22,23 @@ class TrafoGiController
 
     public function index()
     {
-        $trafoGis = $this->model->all();
-        return view("trafo-gi/index", compact('trafoGis'));
+        $page = (int)($_GET['page'] ?? 1);
+        $perPage = (int)($_GET['per_page'] ?? 10);
+        $search = $_GET['search'] ?? '';
+        
+        // Validate page number
+        if ($page < 1) $page = 1;
+        
+        // Validate per_page (max 100)
+        if ($perPage > 100) $perPage = 100;
+        if ($perPage < 1) $perPage = 10;
+
+        $result = $this->model->paginate($page, $perPage, $search);
+        
+        $trafoGis = $result['data'];
+        $pagination = $result['pagination'];
+        
+        return view("trafo-gi/index", compact('trafoGis', 'pagination', 'search'));
     }
 
     public function create()

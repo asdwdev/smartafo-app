@@ -17,15 +17,23 @@ class PenyulangController
 
     public function index()
     {
-        $penyulangs = $this->model->join(
-            "gardu_induk",        // tabel relasi
-            "gi_id",              // foreign key di penyulang
-            "gi_id",              // primary key di gardu_induk
-            "t.*, j.nama_gi",     // kolom yang diambil
-            "t.created_at DESC"   // order
-        );
+        $page = (int)($_GET['page'] ?? 1);
+        $perPage = (int)($_GET['per_page'] ?? 10);
+        $search = $_GET['search'] ?? '';
+        
+        // Validate page number
+        if ($page < 1) $page = 1;
+        
+        // Validate per_page (max 100)
+        if ($perPage > 100) $perPage = 100;
+        if ($perPage < 1) $perPage = 10;
 
-        return view("penyulang/index", compact('penyulangs'));
+        $result = $this->model->paginateWithJoin($page, $perPage, $search);
+        
+        $penyulangs = $result['data'];
+        $pagination = $result['pagination'];
+        
+        return view("penyulang/index", compact('penyulangs', 'pagination', 'search'));
     }
 
 
