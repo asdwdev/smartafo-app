@@ -27,14 +27,24 @@ class UserAccountController
 
     public function store(Request $request)
     {
-        $data = [
-            'nip'           => $request->input('nip'),
-            'full_name'     => $request->input('full_name'),
-            'email_pln'     => $request->input('email_pln'),
-            'area'          => $request->input('area'),
-            'level_user'    => $request->input('level_user'),
-            'password_hash' => password_hash($request->input('password'), PASSWORD_BCRYPT),
-        ];
+        [$valid, $data] = $request->validate([
+            'nip'        => 'required|min:5|max:20|unique:user_account,nip',
+            'full_name'  => 'required|min:3|max:100',
+            'email_pln'  => 'required|email|unique:user_account,email_pln',
+            'area'       => 'required|max:100',
+            'level_user' => 'required',
+            'password'   => 'required|min:6',
+            'is_approved' => 'required|in:TRUE,FALSE',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $old = $request->all();
+            return view("user-account/create", compact('errors', 'old'));
+        }
+
+        $data['password_hash'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        unset($data['password']); // biar gak nyimpen plain password
 
         $this->userModel->create($data);
         header("Location: /user-account");
@@ -55,13 +65,21 @@ class UserAccountController
 
     public function update(Request $request, $id)
     {
-        $data = [
-            'nip'        => $request->input('nip'),
-            'full_name'  => $request->input('full_name'),
-            'email_pln'  => $request->input('email_pln'),
-            'area'       => $request->input('area'),
-            'level_user' => $request->input('level_user'),
-        ];
+        [$valid, $data] = $request->validate([
+            'nip'        => 'required|min:5|max:20|unique:user_account,nip',
+            'full_name'  => 'required|min:3|max:100',
+            'email_pln'  => 'required|email|unique:user_account,email_pln',
+            'area'       => 'required|max:100',
+            'level_user' => 'required',
+            'password'   => 'required|min:6',
+            'is_approved' => 'required|in:TRUE,FALSE',
+        ]);
+
+        if (!$valid) {
+            $errors = $data;
+            $user = $this->userModel->find($id);
+            return view("user-account/edit", compact('errors', 'user'));
+        }
 
         $this->userModel->update($id, $data);
         header("Location: /user-account");
