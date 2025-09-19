@@ -29,8 +29,7 @@
                 <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Home</h3>
                 <a href="/dashboard"
                     class="flex items-center px-3 py-2 text-sm rounded-lg hover:bg-blue-50 hover:text-blue-600 transition">
-                    <span class="material-icons text-base mr-2">dashboard</span>
-                    Dashboard
+                    <span class="material-icons text-base mr-2">Dashboard</span>
                 </a>
             </div>
 

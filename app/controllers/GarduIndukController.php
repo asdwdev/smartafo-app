@@ -28,25 +28,19 @@ class GarduIndukController
     public function store(Request $request)
     {
         [$valid, $data] = $request->validate([
-            'kode_gi' => 'nullable|regex:/^[A-Za-z0-9_-]+$/|unique:gardu_induk,kode_gi',
+            'kode_gi' => 'required|regex:/^[A-Za-z0-9_-]+$/|unique:gardu_induk,kode_gi',
             'nama_gi' => 'required|max:255',
-            'area'    => 'nullable|max:64',
-            'alamat'  => 'nullable|max:500',
-            'lat'     => 'nullable|numeric|between:-90,90',
-            'lon'     => 'nullable|numeric|between:-180,180',
+            'area'    => 'required|max:64',
+            'alamat'  => 'required|max:500',
+            'lat'     => 'required|numeric|between:-90,90',
+            'lon'     => 'required|numeric|between:-180,180',
         ]);
 
         if (!$valid) {
             $errors = $data;
-            return view("gardu-induk/create", compact('errors'));
+            $old = $request->all();
+            return view("gardu-induk/create", compact('errors', 'old'));
         }
-
-        // normalisasi kosong → null
-        $data['lat'] = $data['lat'] === '' ? null : $data['lat'];
-        $data['lon'] = $data['lon'] === '' ? null : $data['lon'];
-        $data['area'] = $data['area'] === '' ? null : $data['area'];
-        $data['alamat'] = $data['alamat'] === '' ? null : $data['alamat'];
-        $data['kode_gi'] = $data['kode_gi'] === '' ? null : $data['kode_gi'];
 
         $this->model->create($data);
         header("Location: /gardu-induk");
@@ -68,12 +62,12 @@ class GarduIndukController
     public function update(Request $request, $id)
     {
         [$valid, $data] = $request->validate([
-            'kode_gi' => "nullable|regex:/^[A-Za-z0-9_-]+$/|unique:gardu_induk,kode_gi,$id,gi_id",
+            'kode_gi' => "required|regex:/^[A-Za-z0-9_-]+$/|unique:gardu_induk,kode_gi,$id,gi_id",
             'nama_gi' => 'required|max:255',
-            'area'    => 'nullable|max:64',
-            'alamat'  => 'nullable|max:500',
-            'lat'     => 'nullable|numeric|between:-90,90',
-            'lon'     => 'nullable|numeric|between:-180,180',
+            'area'    => 'required|max:64',
+            'alamat'  => 'required|max:500',
+            'lat'     => 'required|numeric|between:-90,90',
+            'lon'     => 'required|numeric|between:-180,180',
         ]);
 
         if (!$valid) {
@@ -81,13 +75,6 @@ class GarduIndukController
             $garduInduk = $this->model->find($id, "gi_id");
             return view("gardu-induk/edit", compact('errors', 'garduInduk', 'id'));
         }
-
-        // normalisasi kosong → null
-        $data['lat'] = $data['lat'] === '' ? null : $data['lat'];
-        $data['lon'] = $data['lon'] === '' ? null : $data['lon'];
-        $data['area'] = $data['area'] === '' ? null : $data['area'];
-        $data['alamat'] = $data['alamat'] === '' ? null : $data['alamat'];
-        $data['kode_gi'] = $data['kode_gi'] === '' ? null : $data['kode_gi'];
 
         $this->model->update($id, $data, "gi_id");
         header("Location: /gardu-induk");

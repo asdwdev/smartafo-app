@@ -1,54 +1,157 @@
 <?php startBlock('content') ?>
-<h3>EDIT DATA GARDU INDUK</h3>
+<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-8">
+    <h3 class="text-xl font-bold text-gray-800 mb-6">Edit Data Gardu Induk</h3>
 
-<?php if (!empty($errors)): ?>
-    <div style="color:red; font-weight:bold; margin-bottom:10px;">
-        <ul>
-            <?php foreach ($errors as $fieldErrors): ?>
-                <?php foreach ($fieldErrors as $error): ?>
-                    <li><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></li>
-                <?php endforeach; ?>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php endif; ?>
+    <!-- Form -->
+    <form method="POST" action="/gardu-induk/<?= $id ?>" class="space-y-5">
+        <input type="hidden" name="_method" value="PUT">
 
-<form method="POST" action="/gardu-induk/<?= $id ?>">
-    <input type="hidden" name="_method" value="PUT">
+        <!-- Kode GI -->
+        <div>
+            <label for="kode_gi" class="block text-sm font-medium text-gray-700">Kode GI</label>
+            <input type="text" id="kode_gi" name="kode_gi"
+                value="<?= htmlspecialchars($garduInduk['kode_gi'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['nama_gi']) ? 'border-red-500' : 'border-gray-400' ?> bg-white text-gray-900 
+                          shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
 
-    <label>Kode GI:
-        <input type="text" name="kode_gi"
-            value="<?= htmlspecialchars($garduInduk['kode_gi'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
-    </label><br><br>
+            <?php if (!empty($errors['kode_gi'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['kode_gi'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
 
-    <label>Nama GI:
-        <input type="text" name="nama_gi"
-            value="<?= htmlspecialchars($garduInduk['nama_gi'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-            required>
-    </label><br><br>
+        <!-- Nama GI -->
+        <div>
+            <label for="nama_gi" class="block text-sm font-medium text-gray-700">Nama GI</label>
+            <input type="text" id="nama_gi" name="nama_gi"
+                value="<?= htmlspecialchars($garduInduk['nama_gi'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                required
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['nama_gi']) ? 'border-red-500' : 'border-gray-400' ?> bg-white text-gray-900 
+                          shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
 
-    <label>Area:
-        <input type="text" name="area"
-            value="<?= htmlspecialchars($garduInduk['area'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
-    </label><br><br>
+            <?php if (!empty($errors['nama_gi'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['nama_gi'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
 
-    <label>Alamat:
-        <textarea name="alamat"><?= htmlspecialchars($garduInduk['alamat'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
-    </label><br><br>
+        <!-- Area -->
+        <div>
+            <label for="area" class="block text-sm font-medium text-gray-700">Area</label>
+            <input type="text" id="area" name="area"
+                value="<?= htmlspecialchars($garduInduk['area'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['area']) ? 'border-red-500' : 'border-gray-400' ?> bg-white text-gray-900 
+                          shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2">
 
-    <label>Latitude:
-        <input type="text" name="lat"
-            value="<?= htmlspecialchars((string)($garduInduk['lat'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
-    </label><br><br>
+            <?php if (!empty($errors['area'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['area'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
 
-    <label>Longitude:
-        <input type="text" name="lon"
-            value="<?= htmlspecialchars((string)($garduInduk['lon'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
-    </label><br><br>
+        <!-- Alamat -->
+        <div>
+            <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+            <textarea id="alamat" name="alamat" rows="3"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['alamat']) ? 'border-red-500' : 'border-gray-400' ?> bg-white text-gray-900 
+                             shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm px-3 py-2"><?= htmlspecialchars($garduInduk['alamat'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
-    <button type="button" onclick="window.history.back()">Back</button>
-    <button type="submit">Update</button>
-</form>
+            <?php if (!empty($errors['alamat'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['alamat'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Map -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Lokasi (klik di peta untuk ganti)</label>
+            <div id="map" class="mt-2 h-72 w-full rounded-lg border border-gray-300 shadow"></div>
+        </div>
+
+        <!-- Latitude -->
+        <div>
+            <label for="lat" class="block text-sm font-medium text-gray-700">Latitude</label>
+            <input type="text" id="lat" name="lat" readonly
+                value="<?= htmlspecialchars((string)($garduInduk['lat'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['lat']) ? 'border-red-500' : 'border-gray-400' ?> bg-gray-100 text-gray-900 
+                          shadow-sm focus:border-blue-500 text-sm px-3 py-2">
+
+            <?php if (!empty($errors['lat'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['lat'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Longitude -->
+        <div>
+            <label for="lon" class="block text-sm font-medium text-gray-700">Longitude</label>
+            <input type="text" id="lon" name="lon" readonly
+                value="<?= htmlspecialchars((string)($garduInduk['lon'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                class="mt-1 block w-full rounded-lg border <?= !empty($errors['lon']) ? 'border-red-500' : 'border-gray-400' ?> bg-gray-100 text-gray-900 
+                          shadow-sm focus:border-blue-500 text-sm px-3 py-2">
+
+            <?php if (!empty($errors['lon'])): ?>
+                <p class="mt-1 text-sm text-red-600">
+                    <?= htmlspecialchars($errors['lon'][0], ENT_QUOTES, 'UTF-8') ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-between pt-4">
+            <button type="button" onclick="window.history.back()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
+                Back
+            </button>
+            <button type="submit"
+                class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
+                Update
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Leaflet JS & CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    const latInput = document.getElementById('lat');
+    const lonInput = document.getElementById('lon');
+    const latVal = parseFloat(latInput.value) || -6.2; // default jakarta
+    const lonVal = parseFloat(lonInput.value) || 106.8;
+
+    const map = L.map('map').setView([latVal, lonVal], 13);
+
+    // Base layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Marker awal (jika ada data koordinat)
+    let marker = L.marker([latVal, lonVal]).addTo(map);
+
+    // Klik peta -> update koordinat
+    map.on('click', function(e) {
+        const {
+            lat,
+            lng
+        } = e.latlng;
+
+        latInput.value = lat.toFixed(6);
+        lonInput.value = lng.toFixed(6);
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker([lat, lng]).addTo(map);
+    });
+</script>
 <?php endBlock() ?>
 
 <?php extend('layouts/app') ?>
