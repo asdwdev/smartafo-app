@@ -3,15 +3,21 @@
 namespace App\Controllers;
 
 use App\Models\KubikelGardu;
+use App\Models\GarduDistribusi;
+use App\Models\Kubikel;
 use App\Core\Request;
 
 class KubikelGarduController
 {
     protected $model;
+    protected $garduModel;
+    protected $kubikelModel;
 
     public function __construct()
     {
-        $this->model = new KubikelGardu();
+        $this->model        = new KubikelGardu();
+        $this->garduModel   = new GarduDistribusi();
+        $this->kubikelModel = new Kubikel();
     }
 
     public function index()
@@ -22,24 +28,53 @@ class KubikelGarduController
 
     public function create()
     {
-        return view("kubikel-gardu/create");
+        $garduDistribusi = $this->garduModel->all();
+        $kubikels        = $this->kubikelModel->all();
+        return view("kubikel-gardu/create", compact('garduDistribusi', 'kubikels'));
     }
 
     public function store(Request $request)
     {
-        $data = [
-            'gd_id'       => $request->input('gd_id'),
-            'kubikel_id'  => $request->input('kubikel_id'),
-            'tgl_pasang'  => $request->input('tgl_pasang'),
-            'tgl_operasi' => $request->input('tgl_operasi'),
-            'status_rc'   => $request->input('status_rc'),
-            'arah_gardu'  => $request->input('arah_gardu'),
-            'ct_info'     => $request->input('ct_info'),
-            'vt_info'     => $request->input('vt_info'),
-            'relay_info'  => $request->input('relay_info'),
-            'fuse_info'   => $request->input('fuse_info'),
-            'keterangan'  => $request->input('keterangan'),
-        ];
+        [$valid, $data] = $request->validate([
+            'gd_id'       => 'required|numeric',
+            'kubikel_id'  => 'required|numeric',
+            'tgl_pasang'  => 'nullable|date',
+            'tgl_operasi' => 'nullable|date',
+            'status_rc'   => 'nullable|max:100',
+            'arah_gardu'  => 'nullable|max:100',
+            'ct_info'     => 'nullable|max:200',
+            'vt_info'     => 'nullable|max:200',
+            'relay_info'  => 'nullable|max:200',
+            'fuse_info'   => 'nullable|max:200',
+            'keterangan'  => 'nullable',
+        ]);
+
+        if (!$valid) {
+            $errors          = $data;
+            $garduDistribusi = $this->garduModel->all();
+            $kubikels        = $this->kubikelModel->all();
+            return view("kubikel-gardu/create", compact('errors', 'garduDistribusi', 'kubikels'));
+        }
+
+        // Cek foreign key manual
+        if (!$this->garduModel->find($data['gd_id'], 'gd_id')) {
+            $errors['gd_id'][] = "Gardu Distribusi tidak ditemukan.";
+        }
+        if (!$this->kubikelModel->find($data['kubikel_id'], 'kubikel_id')) {
+            $errors['kubikel_id'][] = "Kubikel tidak ditemukan.";
+        }
+        if (!empty($errors)) {
+            $garduDistribusi = $this->garduModel->all();
+            $kubikels        = $this->kubikelModel->all();
+            return view("kubikel-gardu/create", compact('errors', 'garduDistribusi', 'kubikels'));
+        }
+
+        // Normalisasi field kosong jadi null
+        foreach (['tgl_pasang', 'tgl_operasi', 'status_rc', 'arah_gardu', 'ct_info', 'vt_info', 'relay_info', 'fuse_info', 'keterangan'] as $f) {
+            if ($data[$f] === '') {
+                $data[$f] = null;
+            }
+        }
 
         $this->model->create($data);
         header("Location: /kubikel-gardu");
@@ -54,25 +89,56 @@ class KubikelGarduController
 
     public function edit($id)
     {
-        $kubikelGardu = $this->model->find($id, "kubikel_gardu_id");
-        return view("kubikel-gardu/edit", compact('kubikelGardu', 'id'));
+        $kubikelGardu    = $this->model->find($id, "kubikel_gardu_id");
+        $garduDistribusi = $this->garduModel->all();
+        $kubikels        = $this->kubikelModel->all();
+        return view("kubikel-gardu/edit", compact('kubikelGardu', 'id', 'garduDistribusi', 'kubikels'));
     }
 
     public function update(Request $request, $id)
     {
-        $data = [
-            'gd_id'       => $request->input('gd_id'),
-            'kubikel_id'  => $request->input('kubikel_id'),
-            'tgl_pasang'  => $request->input('tgl_pasang'),
-            'tgl_operasi' => $request->input('tgl_operasi'),
-            'status_rc'   => $request->input('status_rc'),
-            'arah_gardu'  => $request->input('arah_gardu'),
-            'ct_info'     => $request->input('ct_info'),
-            'vt_info'     => $request->input('vt_info'),
-            'relay_info'  => $request->input('relay_info'),
-            'fuse_info'   => $request->input('fuse_info'),
-            'keterangan'  => $request->input('keterangan'),
-        ];
+        [$valid, $data] = $request->validate([
+            'gd_id'       => 'required|numeric',
+            'kubikel_id'  => 'required|numeric',
+            'tgl_pasang'  => 'nullable|date',
+            'tgl_operasi' => 'nullable|date',
+            'status_rc'   => 'nullable|max:100',
+            'arah_gardu'  => 'nullable|max:100',
+            'ct_info'     => 'nullable|max:200',
+            'vt_info'     => 'nullable|max:200',
+            'relay_info'  => 'nullable|max:200',
+            'fuse_info'   => 'nullable|max:200',
+            'keterangan'  => 'nullable',
+        ]);
+
+        if (!$valid) {
+            $errors          = $data;
+            $kubikelGardu    = $this->model->find($id, "kubikel_gardu_id");
+            $garduDistribusi = $this->garduModel->all();
+            $kubikels        = $this->kubikelModel->all();
+            return view("kubikel-gardu/edit", compact('errors', 'kubikelGardu', 'id', 'garduDistribusi', 'kubikels'));
+        }
+
+        // Cek foreign key manual
+        if (!$this->garduModel->find($data['gd_id'], 'gd_id')) {
+            $errors['gd_id'][] = "Gardu Distribusi tidak ditemukan.";
+        }
+        if (!$this->kubikelModel->find($data['kubikel_id'], 'kubikel_id')) {
+            $errors['kubikel_id'][] = "Kubikel tidak ditemukan.";
+        }
+        if (!empty($errors)) {
+            $kubikelGardu    = $this->model->find($id, "kubikel_gardu_id");
+            $garduDistribusi = $this->garduModel->all();
+            $kubikels        = $this->kubikelModel->all();
+            return view("kubikel-gardu/edit", compact('errors', 'kubikelGardu', 'id', 'garduDistribusi', 'kubikels'));
+        }
+
+        // Normalisasi field kosong jadi null
+        foreach (['tgl_pasang', 'tgl_operasi', 'status_rc', 'arah_gardu', 'ct_info', 'vt_info', 'relay_info', 'fuse_info', 'keterangan'] as $f) {
+            if ($data[$f] === '') {
+                $data[$f] = null;
+            }
+        }
 
         $this->model->update($id, $data, "kubikel_gardu_id");
         header("Location: /kubikel-gardu");
