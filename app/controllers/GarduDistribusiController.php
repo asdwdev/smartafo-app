@@ -30,39 +30,34 @@ class GarduDistribusiController
     {
         $garduInduks = $this->giModel->all();
         $penyulangs  = $this->penyulangModel->all();
+
         return view("gardu-distribusi/create", compact('garduInduks', 'penyulangs'));
     }
 
     public function store(Request $request)
     {
         [$valid, $data] = $request->validate([
-            'gi_id'        => 'nullable|numeric',
-            'penyulang_id' => 'nullable|numeric',
-            'kode_gardu'   => 'nullable|regex:/^[A-Za-z0-9_-]+$/|max:64|unique:gardu_distribusi,kode_gardu',
+            'gi_id'        => 'required|numeric',
+            'penyulang_id' => 'required|numeric',
+            'kode_gardu'   => 'required|regex:/^[A-Za-z0-9_-]+$/|max:64|unique:gardu_distribusi,kode_gardu',
             'nama_gardu'   => 'required|max:128',
-            'alamat'       => 'nullable|max:500',
-            'lat'          => 'nullable|numeric|between:-90,90',
-            'lon'          => 'nullable|numeric|between:-180,180',
-            'keterangan'   => 'nullable|max:1000',
+            'alamat'       => 'required|max:500',
+            'lat'          => 'required|numeric|between:-90,90',
+            'lon'          => 'required|numeric|between:-180,180',
+            'keterangan'   => 'required|max:1000',
         ]);
 
         if (!$valid) {
             $errors = $data;
             $garduInduks = $this->giModel->all();
             $penyulangs  = $this->penyulangModel->all();
+
             return view("gardu-distribusi/create", [
-                'errors' => $errors,
-                'old' => $request->all(),
+                'errors'      => $errors,
+                'old'         => $request->all(),
                 'garduInduks' => $garduInduks,
                 'penyulangs'  => $penyulangs
             ]);
-        }
-
-        // normalisasi kosong → null
-        foreach (['gi_id', 'penyulang_id', 'lat', 'lon', 'alamat', 'kode_gardu', 'keterangan'] as $field) {
-            if ($data[$field] === '') {
-                $data[$field] = null;
-            }
         }
 
         $this->model->create($data);
@@ -73,12 +68,22 @@ class GarduDistribusiController
     public function show($id)
     {
         $gardu = $this->model->find($id, "gd_id");
+        if (!$gardu) {
+            header("Location: /gardu-distribusi");
+            exit;
+        }
+
         return view("gardu-distribusi/show", compact('gardu'));
     }
 
     public function edit($id)
     {
         $gardu = $this->model->find($id, "gd_id");
+        if (!$gardu) {
+            header("Location: /gardu-distribusi");
+            exit;
+        }
+
         $garduInduks = $this->giModel->all();
         $penyulangs  = $this->penyulangModel->all();
 
@@ -88,14 +93,14 @@ class GarduDistribusiController
     public function update(Request $request, $id)
     {
         [$valid, $data] = $request->validate([
-            'gi_id'        => 'nullable|numeric',
-            'penyulang_id' => 'nullable|numeric',
-            'kode_gardu'   => "nullable|regex:/^[A-Za-z0-9_-]+$/|max:64|unique:gardu_distribusi,kode_gardu,$id,gd_id",
+            'gi_id'        => 'required|numeric',
+            'penyulang_id' => 'required|numeric',
+            'kode_gardu'   => "required|regex:/^[A-Za-z0-9_-]+$/|max:64|unique:gardu_distribusi,kode_gardu,$id,gd_id",
             'nama_gardu'   => 'required|max:128',
-            'alamat'       => 'nullable|max:500',
-            'lat'          => 'nullable|numeric|between:-90,90',
-            'lon'          => 'nullable|numeric|between:-180,180',
-            'keterangan'   => 'nullable|max:1000',
+            'alamat'       => 'required|max:500',
+            'lat'          => 'required|numeric|between:-90,90',
+            'lon'          => 'required|numeric|between:-180,180',
+            'keterangan'   => 'required|max:1000',
         ]);
 
         if (!$valid) {
@@ -103,13 +108,8 @@ class GarduDistribusiController
             $gardu = $this->model->find($id, "gd_id");
             $garduInduks = $this->giModel->all();
             $penyulangs  = $this->penyulangModel->all();
-            return view("gardu-distribusi/edit", compact('errors', 'gardu', 'garduInduks', 'penyulangs', 'id'));
-        }
 
-        foreach (['gi_id', 'penyulang_id', 'lat', 'lon', 'alamat', 'kode_gardu', 'keterangan'] as $field) {
-            if ($data[$field] === '') {
-                $data[$field] = null;
-            }
+            return view("gardu-distribusi/edit", compact('errors', 'gardu', 'garduInduks', 'penyulangs', 'id'));
         }
 
         $this->model->update($id, $data, "gd_id");

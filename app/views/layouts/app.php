@@ -23,29 +23,34 @@
             </div>
         </div>
 
+        <?php
+        $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        ?>
+
         <!-- Navigation -->
         <nav class="flex-1 p-4 overflow-y-auto">
             <div class="mb-6">
                 <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Home</h3>
                 <a href="/dashboard"
-                    class="flex items-center px-3 py-2 text-sm rounded-lg hover:bg-blue-50 hover:text-blue-600 transition">
+                    class="flex items-center px-3 py-2 text-sm rounded-lg hover:bg-blue-50 hover:text-blue-600 transition <?= $currentPath === '/dashboard' ? 'bg-blue-50 text-blue-600' : '' ?>">
                     <span class="material-icons text-base mr-2">Dashboard</span>
                 </a>
             </div>
 
+
             <div class="mb-6">
                 <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Master Data</h3>
                 <ul class="space-y-1">
-                    <li><a href="/gardu-induk" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Gardu Induk</a></li>
-                    <li><a href="/penyulang" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Penyulang</a></li>
-                    <li><a href="/gardu-hubung" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Gardu Hubung</a></li>
-                    <li><a href="/gardu-distribusi" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Gardu Distribusi</a></li>
-                    <li><a href="/trafo-gi" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Trafo GI</a></li>
-                    <li><a href="/trafo-gardu" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Trafo Gardu Distribusi</a></li>
-                    <li><a href="/kubikel-gardu" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Kubikel Gardu Distribusi</a></li>
-                    <li><a href="/jurusan" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Jurusan</a></li>
-                    <li><a href="/trafo" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Trafo</a></li>
-                    <li><a href="/kubikel" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Kubikel</a></li>
+                    <li><a href="/gardu-induk" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/gardu-induk' ? 'bg-blue-50 text-blue-600' : '' ?>">Gardu Induk</a></li>
+                    <li><a href="/penyulang" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/penyulang' ? 'bg-blue-50 text-blue-600' : '' ?>">Penyulang</a></li>
+                    <li><a href="/gardu-hubung" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/gardu-hubung' ? 'bg-blue-50 text-blue-600' : '' ?>">Gardu Hubung</a></li>
+                    <li><a href="/gardu-distribusi" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/gardu-distribusi' ? 'bg-blue-50 text-blue-600' : '' ?>">Gardu Distribusi</a></li>
+                    <li><a href="/trafo-gi" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/trafo-gi' ? 'bg-blue-50 text-blue-600' : '' ?>">Trafo GI</a></li>
+                    <li><a href="/trafo-gardu" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/trafo-gardu' ? 'bg-blue-50 text-blue-600' : '' ?>">Trafo Gardu Distribusi</a></li>
+                    <li><a href="/kubikel-gardu" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/kubikel-gardu' ? 'bg-blue-50 text-blue-600' : '' ?>">Kubikel Gardu Distribusi</a></li>
+                    <li><a href="/jurusan" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/jurusan' ? 'bg-blue-50 text-blue-600' : '' ?>">Jurusan</a></li>
+                    <li><a href="/trafo" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/trafo' ? 'bg-blue-50 text-blue-600' : '' ?>">Trafo</a></li>
+                    <li><a href="/kubikel" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 <?= $currentPath === '/kubikel' ? 'bg-blue-50 text-blue-600' : '' ?>">Kubikel</a></li>
                 </ul>
             </div>
 
