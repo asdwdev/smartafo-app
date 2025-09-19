@@ -75,8 +75,18 @@ $router->middlewareGroup([Middleware::class . '::auth'], function ($router) {
     // gardu penyulang routes
     $router->resource("/user-account", UserAccountController::class);
 
+    // Statistik
+    $router->get('/statistik/penyulang-per-gi', HomeController::class, 'penyulangPerGI');
+    $router->get('/statistik/gardu-per-penyulang', HomeController::class, 'garduPerPenyulang');
+    $router->get('/statistik/gardu-per-area', HomeController::class, 'garduPerArea');
+    $router->get('/statistik/penyulang-per-area', HomeController::class, 'penyulangPerArea');
+    $router->get('/statistik/trafo-per-area', HomeController::class, 'trafoPerArea');
+    $router->get('/statistik/jurusan-per-area', HomeController::class, 'jurusanPerArea');
+    $router->get('/statistik/kubikel-gardu-per-area', HomeController::class, 'kubikelGarduPerArea');
+
     // logout
     $router->get("/logout", AuthController::class, "logout");
 });
+
 
 $router->dispatch($path, $method);

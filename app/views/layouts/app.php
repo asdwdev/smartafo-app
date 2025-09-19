@@ -117,13 +117,65 @@
             <div class="mb-6">
                 <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Rekap Data</h3>
                 <ul class="space-y-1">
-                    <li><a href="#" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Penyulang per GI</a></li>
-                    <li><a href="#" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Gardu per Penyulang</a></li>
-                    <li><a href="#" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Gardu per Area</a></li>
-                    <li><a href="#" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">Trafo per Area</a></li>
-                    <li><a href="/user-account" class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600">User</a></li>
+                    <li>
+                        <a href="/statistik/penyulang-per-gi"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/statistik/penyulang-per-gi') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            Jml Penyulang per GI
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistik/gardu-per-penyulang"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/statistik/gardu-per-penyulang') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            Jml Gardu per Penyulang
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistik/gardu-per-area"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/statistik/gardu-per-area') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            Jml Gardu per Area
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistik/penyulang-per-area"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/statistik/penyulang-per-area') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            Jml Penyulang per Area
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistik/trafo-per-area"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/statistik/trafo-per-area') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            Jml Trafo Terpasang per Area
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistik/jurusan-per-area"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/statistik/jurusan-per-area') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            Jml Jurusan per Area
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistik/kubikel-gardu-per-area"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/statistik/kubikel-gardu-per-area') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            Jml Kubikel Gardu Distribusi per Area
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/user-account"
+                            class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 
+               <?= str_starts_with($currentPath, '/user-account') ? 'bg-blue-50 text-blue-600' : '' ?>">
+                            User
+                        </a>
+                    </li>
                 </ul>
             </div>
+
         </nav>
 
         <!-- Footer Sidebar -->
