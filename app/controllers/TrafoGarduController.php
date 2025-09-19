@@ -38,13 +38,13 @@ class TrafoGarduController
         [$valid, $data] = $request->validate([
             'gd_id'         => 'required|numeric',
             'trafo_id'      => 'required|numeric',
-            'tgl_pasang'    => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
-            'tgl_operasi'   => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
-            'status_operasi' => 'nullable|max:100',
-            'kondisi_fisik' => 'nullable|max:100',
-            'posisi_arde'   => 'nullable|max:100',
-            'arah_fasa'     => 'nullable|max:32',
-            'keterangan'    => 'nullable',
+            'tgl_pasang'    => 'required|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'tgl_operasi'   => 'required|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'status_operasi' => 'required|max:100',
+            'kondisi_fisik' => 'required|max:100',
+            'posisi_arde'   => 'required|max:100',
+            'arah_fasa'     => 'required|max:32',
+            'keterangan'    => 'required',
         ]);
 
         if (!$valid) {
@@ -86,13 +86,13 @@ class TrafoGarduController
         [$valid, $data] = $request->validate([
             'gd_id'         => 'required|numeric',
             'trafo_id'      => 'required|numeric',
-            'tgl_pasang'    => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
-            'tgl_operasi'   => 'nullable|regex:/^\d{4}-\d{2}-\d{2}$/',
-            'status_operasi' => 'nullable|max:100',
-            'kondisi_fisik' => 'nullable|max:100',
-            'posisi_arde'   => 'nullable|max:100',
-            'arah_fasa'     => 'nullable|max:32',
-            'keterangan'    => 'nullable',
+            'tgl_pasang'    => 'required|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'tgl_operasi'   => 'required|regex:/^\d{4}-\d{2}-\d{2}$/',
+            'status_operasi' => 'required|max:100',
+            'kondisi_fisik' => 'required|max:100',
+            'posisi_arde'   => 'required|max:100',
+            'arah_fasa'     => 'required|max:32',
+            'keterangan'    => 'required',
         ]);
 
         if (!$valid) {
